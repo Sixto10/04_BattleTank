@@ -18,12 +18,6 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	UBlackboardData* BlackboardData = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	UBehaviorTree* BehaviorTree = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	FName BlackboardPlayerPosKey = FName("PlayerPos");
+	UPROPERTY(EditAnywhere, Category = "AI Setup")
+	float AcceptanceRadius = 5.0;
 };
