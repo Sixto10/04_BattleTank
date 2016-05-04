@@ -31,5 +31,8 @@ public:
 	// Takes the controller input from the player or AI from -1 to +1
 	// TODO map AI movement through this layer
 	UFUNCTION(BlueprintCallable, Category = Input)
-	void IntendRotateRight(float Throw);
+	void IntendTurnRight(float Throw);
+
+private:
+	float MaxSpeed = 50;
 };

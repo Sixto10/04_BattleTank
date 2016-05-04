@@ -3,6 +3,7 @@
 #include "BattleTank.h"
 #include "TankMovementComponent.h"
 
+#define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
 // Sets default values for this component's properties
 UTankMovementComponent::UTankMovementComponent()
@@ -36,17 +37,27 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
-	// UE_LOG(LogTemp, Warning, TEXT("Movement interrupted :-)"));
+	//Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
+
+	auto TankForward = GetOwner()->GetActorForwardVector();
+
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
+	IntendMoveForward(Dot3(AIForwardIntention, TankForward));
+
+	auto AITurnIntention = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+	FString StringToPrint = FString::SanitizeFloat(AITurnIntention);
+	// PRINT(StringToPrint);
+	IntendTurnRight(AITurnIntention);
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
 	auto Forward = GetOwner()->GetActorForwardVector();
-	AddInputVector(Forward * Throw);
+	auto PreviousLocation = GetOwner()->GetActorLocation();
+	GetOwner()->SetActorLocation(PreviousLocation + Forward * Throw * MaxSpeed);
 }
 
-void UTankMovementComponent::IntendRotateRight(float Throw)
+void UTankMovementComponent::IntendTurnRight(float Throw)
 {
 	GetOwner()->AddActorLocalRotation(FRotator(0, Throw, 0));
 }
