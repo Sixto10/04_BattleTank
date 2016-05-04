@@ -3,7 +3,8 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
-#include "Tank.generated.h"
+#include "Tank.generated.h" // Must be the last include
+
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
