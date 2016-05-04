@@ -36,6 +36,6 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	//Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
-	UE_LOG(LogTemp, Warning, TEXT("Movement interrupted :-)"));
+	Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
+	// UE_LOG(LogTemp, Warning, TEXT("Movement interrupted :-)"));
 }
