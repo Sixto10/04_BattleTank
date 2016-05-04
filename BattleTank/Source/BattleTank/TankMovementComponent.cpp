@@ -39,3 +39,14 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
 	// UE_LOG(LogTemp, Warning, TEXT("Movement interrupted :-)"));
 }
+
+void UTankMovementComponent::IntendMoveForward(float Throw)
+{
+	auto Forward = GetOwner()->GetActorForwardVector();
+	AddInputVector(Forward * Throw);
+}
+
+void UTankMovementComponent::IntendRotateRight(float Throw)
+{
+	GetOwner()->AddActorLocalRotation(FRotator(0, Throw, 0));
+}

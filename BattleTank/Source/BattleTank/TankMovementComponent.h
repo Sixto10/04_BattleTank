@@ -22,5 +22,14 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed);
+
+	// Takes the controller input from the player or AI from -1 to +1
+	// TODO map AI movement through this layer
+	UFUNCTION(BlueprintCallable, Category=Input)
+	void IntendMoveForward(float Throw);
 	
+	// Takes the controller input from the player or AI from -1 to +1
+	// TODO map AI movement through this layer
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void IntendRotateRight(float Throw);
 };
