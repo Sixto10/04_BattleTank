@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
+#include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "TankMovementComponent.h"
 
 #define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
@@ -31,8 +32,19 @@ void UTankMovementComponent::BeginPlay()
 void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
+	// Sideways force
+	// GetOwner()->GetRootPrimitiveComponent()->AddForce(TestParam3 *  GetOwner()->GetActorRightVector() * -Dot3(GetOwner()->GetActorRightVector(), GetOwner()->GetVelocity()));
+	auto Forward = GetOwner()->GetActorForwardVector();
+	auto ActorLocation = GetOwner()->GetActorLocation();
 
-	GetOwner()->GetRootPrimitiveComponent()->AddForce(TestParam3 *  GetOwner()->GetActorRightVector() * -Dot3(GetOwner()->GetActorRightVector(), GetOwner()->GetVelocity()));
+	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, -250, 0));
+	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * LeftTrackThrottle * TestParam1, LeftTrackLocation);
+	
+	auto RightTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, 250, 0));
+	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * RightTrackThrottle * TestParam1, RightTrackLocation);
+
+	LeftTrackThrottle = 0;
+	RightTrackThrottle = 0;
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
@@ -51,31 +63,31 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-
-//	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * Throw * DrivingForce, LeftTrackLocation);
-	// GetOwner()->SetActorLocation(PreviousLocation + Forward * Throw * MaxSpeed);
+	DriveLeftTrack(Throw);
+	DriveRightTrack(Throw);
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
-	GetOwner()->GetRootPrimitiveComponent()->AddTorque(FVector(0, 0, Throw * TestParam2));
-	// GetOwner()->AddActorLocalRotation(FRotator(0, Throw, 0));
+	// if intending right, suppress right throttle proporpionately
+
+	if (Throw > 0)
+	{
+		RightTrackThrottle = RightTrackThrottle - Throw;
+	}
+	else
+	{
+		LeftTrackThrottle = LeftTrackThrottle + Throw;
+	}
 }
 
 void UTankMovementComponent::DriveLeftTrack(float Throttle)
 {
-	auto Forward = GetOwner()->GetActorForwardVector();
-	auto ActorLocation = GetOwner()->GetActorLocation();
-	auto TrackOffset = FVector(500, -250, 0);
-	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(TrackOffset);
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * Throttle * TestParam1, LeftTrackLocation);
+	// Note generic type specifier here
+	LeftTrackThrottle = FMath::Clamp<float>(LeftTrackThrottle + Throttle, -1, 1);
 }
 
 void UTankMovementComponent::DriveRightTrack(float Throttle)
 {
-	auto Forward = GetOwner()->GetActorForwardVector();
-	auto ActorLocation = GetOwner()->GetActorLocation();
-	auto TrackOffset = FVector(500, 250, 0);
-	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(TrackOffset);
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * Throttle * TestParam1, LeftTrackLocation);
+	RightTrackThrottle = FMath::Clamp<float>(RightTrackThrottle + Throttle, -1, 1);
 }

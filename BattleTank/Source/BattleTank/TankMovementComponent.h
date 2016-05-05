@@ -47,10 +47,12 @@ private:
 	float TestParam1 = 0;
 
 	UPROPERTY(EditAnywhere)
-		float TestParam2 = 0;
+	float TestParam2 = 0;
 
 	UPROPERTY(EditAnywhere)
 	float TestParam3 = 0;
 
+	float LeftTrackThrottle = 0;
 
+	float RightTrackThrottle = 0;
 };
