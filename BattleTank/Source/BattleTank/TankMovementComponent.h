@@ -33,6 +33,24 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void IntendTurnRight(float Throw);
 
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void DriveLeftTrack(float Throttle);
+
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void DriveRightTrack(float Throttle);
+
+
 private:
 	float MaxSpeed = 50;
+
+	UPROPERTY(EditAnywhere)
+	float TestParam1 = 0;
+
+	UPROPERTY(EditAnywhere)
+		float TestParam2 = 0;
+
+	UPROPERTY(EditAnywhere)
+	float TestParam3 = 0;
+
+
 };

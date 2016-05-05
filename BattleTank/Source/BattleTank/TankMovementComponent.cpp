@@ -32,7 +32,7 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// ...
+	GetOwner()->GetRootPrimitiveComponent()->AddForce(TestParam3 *  GetOwner()->GetActorRightVector() * -Dot3(GetOwner()->GetActorRightVector(), GetOwner()->GetVelocity()));
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
@@ -46,18 +46,36 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 
 	auto AITurnIntention = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
 	FString StringToPrint = FString::SanitizeFloat(AITurnIntention);
-	// PRINT(StringToPrint);
 	IntendTurnRight(AITurnIntention);
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-	auto Forward = GetOwner()->GetActorForwardVector();
-	auto PreviousLocation = GetOwner()->GetActorLocation();
-	GetOwner()->SetActorLocation(PreviousLocation + Forward * Throw * MaxSpeed);
+
+//	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * Throw * DrivingForce, LeftTrackLocation);
+	// GetOwner()->SetActorLocation(PreviousLocation + Forward * Throw * MaxSpeed);
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
-	GetOwner()->AddActorLocalRotation(FRotator(0, Throw, 0));
+	GetOwner()->GetRootPrimitiveComponent()->AddTorque(FVector(0, 0, Throw * TestParam2));
+	// GetOwner()->AddActorLocalRotation(FRotator(0, Throw, 0));
+}
+
+void UTankMovementComponent::DriveLeftTrack(float Throttle)
+{
+	auto Forward = GetOwner()->GetActorForwardVector();
+	auto ActorLocation = GetOwner()->GetActorLocation();
+	auto TrackOffset = FVector(500, -250, 0);
+	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(TrackOffset);
+	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * Throttle * TestParam1, LeftTrackLocation);
+}
+
+void UTankMovementComponent::DriveRightTrack(float Throttle)
+{
+	auto Forward = GetOwner()->GetActorForwardVector();
+	auto ActorLocation = GetOwner()->GetActorLocation();
+	auto TrackOffset = FVector(500, 250, 0);
+	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(TrackOffset);
+	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * Throttle * TestParam1, LeftTrackLocation);
 }
