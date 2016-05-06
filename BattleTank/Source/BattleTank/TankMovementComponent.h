@@ -38,21 +38,19 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void DriveRightTrack(float Throttle);
+	UPROPERTY(BlueprintReadWrite, Category = PlayerMusicSkill)
+	FVector ForwardDriver = FVector::ZeroVector;
 
 
 private:
 	float MaxSpeed = 50;
 
 	UPROPERTY(EditAnywhere)
-	float TestParam1 = 0;
+	float TrackMaxDrivingForce = 0;
 
-	UPROPERTY(EditAnywhere)
-	float TestParam2 = 0;
-
-	UPROPERTY(EditAnywhere)
-	float TestParam3 = 0;
 
 	float LeftTrackThrottle = 0;
-
 	float RightTrackThrottle = 0;
+
+	FVector FindGroundForward();
 };

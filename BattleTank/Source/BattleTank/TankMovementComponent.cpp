@@ -4,7 +4,7 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "TankMovementComponent.h"
 
-#define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
+#define OUT
 
 // Sets default values for this component's properties
 UTankMovementComponent::UTankMovementComponent()
@@ -34,22 +34,41 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	// Sideways force
 	// GetOwner()->GetRootPrimitiveComponent()->AddForce(TestParam3 *  GetOwner()->GetActorRightVector() * -Dot3(GetOwner()->GetActorRightVector(), GetOwner()->GetVelocity()));
-	auto Forward = GetOwner()->GetActorForwardVector();
+	auto Forward = ForwardDriver;
+	ForwardDriver = FVector::ZeroVector;
 	auto ActorLocation = GetOwner()->GetActorLocation();
 
 	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, -250, 0));
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * LeftTrackThrottle * TestParam1, LeftTrackLocation);
+	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * LeftTrackThrottle * TrackMaxDrivingForce, LeftTrackLocation);
 	
 	auto RightTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, 250, 0));
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * RightTrackThrottle * TestParam1, RightTrackLocation);
+	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * RightTrackThrottle * TrackMaxDrivingForce, RightTrackLocation);
 
 	LeftTrackThrottle = 0;
 	RightTrackThrottle = 0;
 }
 
+FVector UTankMovementComponent::FindGroundForward()
+{
+	auto ProbeSpheres = GetOwner()->GetComponentsByTag(USphereComponent::StaticClass(), FName("GroundProbe"));
+	if (ProbeSpheres.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't find me none of them there GroundProbe tags"));
+		return FVector::ZeroVector;
+	}
+	
+	auto Sphere = Cast<USphereComponent>(ProbeSpheres[0]);
+	FVector CollisionVector = FVector::ZeroVector;
+	auto Distance = Sphere->GetDistanceToCollision(Sphere->GetComponentLocation(), OUT CollisionVector);
+	UE_LOG(LogTemp, Warning, TEXT("Distance: %f, Vector: %s"), Distance, *CollisionVector.ToString());
+
+	return GetOwner()->GetActorForwardVector();
+}
+
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
 	//Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
+	// UE_LOG(LogTemp, Warning, TEXT("RequestDirectMove"));
 
 	auto TankForward = GetOwner()->GetActorForwardVector();
 
@@ -57,7 +76,6 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	IntendMoveForward(Dot3(AIForwardIntention, TankForward));
 
 	auto AITurnIntention = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
-	FString StringToPrint = FString::SanitizeFloat(AITurnIntention);
 	IntendTurnRight(AITurnIntention);
 }
 
@@ -91,3 +109,4 @@ void UTankMovementComponent::DriveRightTrack(float Throttle)
 {
 	RightTrackThrottle = FMath::Clamp<float>(RightTrackThrottle + Throttle, -1, 1);
 }
+
