@@ -33,10 +33,13 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	// Sideways force
+
 	// GetOwner()->GetRootPrimitiveComponent()->AddForce(TestParam3 *  GetOwner()->GetActorRightVector() * -Dot3(GetOwner()->GetActorRightVector(), GetOwner()->GetVelocity()));
 	auto Forward = ForwardDriver;
 	ForwardDriver = FVector::ZeroVector;
 	auto ActorLocation = GetOwner()->GetActorLocation();
+
+
 
 	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, -250, 0));
 	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * LeftTrackThrottle * TrackMaxDrivingForce, LeftTrackLocation);
@@ -46,23 +49,6 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 
 	LeftTrackThrottle = 0;
 	RightTrackThrottle = 0;
-}
-
-FVector UTankMovementComponent::FindGroundForward()
-{
-	auto ProbeSpheres = GetOwner()->GetComponentsByTag(USphereComponent::StaticClass(), FName("GroundProbe"));
-	if (ProbeSpheres.Num() == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't find me none of them there GroundProbe tags"));
-		return FVector::ZeroVector;
-	}
-	
-	auto Sphere = Cast<USphereComponent>(ProbeSpheres[0]);
-	FVector CollisionVector = FVector::ZeroVector;
-	auto Distance = Sphere->GetDistanceToCollision(Sphere->GetComponentLocation(), OUT CollisionVector);
-	UE_LOG(LogTemp, Warning, TEXT("Distance: %f, Vector: %s"), Distance, *CollisionVector.ToString());
-
-	return GetOwner()->GetActorForwardVector();
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)

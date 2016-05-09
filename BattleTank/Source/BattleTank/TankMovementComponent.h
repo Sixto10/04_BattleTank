@@ -49,9 +49,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	float TrackMaxDrivingForce = 0;
 
-	UPROPERTY(EditAnywhere)
-	float SidewaysFriction = 0;
-
 	float LeftTrackThrottle = 0;
 	float RightTrackThrottle = 0;
 
