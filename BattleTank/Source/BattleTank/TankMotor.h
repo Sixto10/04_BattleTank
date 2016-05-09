@@ -23,11 +23,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
-	
+
 private:
 	UPROPERTY(EditAnywhere)
 	float TrackMaxDrivingForce = 50000;
 
-	float Throttle = 1;
+	float Throttle = 0;
 
 };

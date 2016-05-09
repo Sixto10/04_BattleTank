@@ -34,20 +34,10 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	// Sideways force
 
-	// GetOwner()->GetRootPrimitiveComponent()->AddForce(TestParam3 *  GetOwner()->GetActorRightVector() * -Dot3(GetOwner()->GetActorRightVector(), GetOwner()->GetVelocity()));
-	auto Forward = ForwardDriver;
-	ForwardDriver = FVector::ZeroVector;
-	auto ActorLocation = GetOwner()->GetActorLocation();
+	OnLeftThrottleRequest.Broadcast(LeftTrackThrottle);
+	OnRightThrottleRequest.Broadcast(RightTrackThrottle);
 
-
-
-	auto LeftTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, -250, 0));
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * LeftTrackThrottle * TrackMaxDrivingForce, LeftTrackLocation);
-	
-	auto RightTrackLocation = ActorLocation + GetOwner()->GetActorRotation().RotateVector(FVector(0, 250, 0));
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Forward * RightTrackThrottle * TrackMaxDrivingForce, RightTrackLocation);
-
-	LeftTrackThrottle = 0;
+	LeftTrackThrottle = 0; // TODO REmove state in two places, who is responsible for throttle state?
 	RightTrackThrottle = 0;
 }
 

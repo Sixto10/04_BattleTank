@@ -33,7 +33,9 @@ void UTankMotor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComp
 	auto Forward = GetOwner()->GetActorForwardVector();
 	auto Force = Forward * Throttle * TrackMaxDrivingForce;
 	auto OurLocation = GetComponentLocation();
+	UE_LOG(LogTemp, Warning, TEXT("Location: %s"), *OurLocation.ToString());
 	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Force, OurLocation);
+	Throttle = 0;
 }
 
 void UTankMotor::SetThrottle(float Throttle)

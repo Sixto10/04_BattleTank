@@ -5,6 +5,9 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "TankMovementComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLeftThrottleRequest, float, Throttle);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRightThrottleRequest, float, Throttle);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankMovementComponent : public UFloatingPawnMovement
@@ -42,6 +45,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = PlayerMusicSkill)
 	FVector ForwardDriver = FVector::ZeroVector;
 
+	UPROPERTY(BlueprintAssignable, Category = Events2)
+	FOnLeftThrottleRequest OnLeftThrottleRequest;
+
+	UPROPERTY(BlueprintAssignable, Category = Events2) 
+	FOnRightThrottleRequest OnRightThrottleRequest;
 
 private:
 	float MaxSpeed = 50;
