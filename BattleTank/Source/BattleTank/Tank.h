@@ -21,14 +21,11 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-
 	UFUNCTION(BlueprintCallable, Category=Weapons)
 	void AddAmmo(int Rounds);
 
-	UFUNCTION(BlueprintPure, Category = Weapons)
-	int GetRoundsLeft();
+	UFUNCTION(BlueprintPure, Category=Weapons)
+	const int GetRoundsLeft();
 
 private:
 	UPROPERTY(EditAnywhere, Category=Weapons)

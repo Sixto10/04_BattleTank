@@ -11,6 +11,6 @@ void ATankAIController::BeginPlay()
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0); // Consider storing if slow
 	MoveToActor(Player, AcceptanceRadius);
 }

@@ -24,7 +24,6 @@ void UTankMovementComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 
@@ -32,25 +31,24 @@ void UTankMovementComponent::BeginPlay()
 void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-	// Sideways force
 
+	// Pass through manual throttle requests
 	OnLeftThrottleRequest.Broadcast(LeftTrackThrottle);
 	OnRightThrottleRequest.Broadcast(RightTrackThrottle);
 
-	LeftTrackThrottle = 0; // TODO REmove state in two places, who is responsible for throttle state?
+	// TODO can we remove this and let the throttle position hold state
+	LeftTrackThrottle = 0;
 	RightTrackThrottle = 0;
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	//Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
-	// UE_LOG(LogTemp, Warning, TEXT("RequestDirectMove"));
-
 	auto TankForward = GetOwner()->GetActorForwardVector();
+	
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal(); // Makes into a unit vector without mutating
+	IntendMoveForward(Dot3(AIForwardIntention, TankForward)); // 
 
-	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
-	IntendMoveForward(Dot3(AIForwardIntention, TankForward));
-
+	//  
 	auto AITurnIntention = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
 	IntendTurnRight(AITurnIntention);
 }
@@ -63,15 +61,13 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
-	// if intending right, suppress right throttle proporpionately
-
 	if (Throw > 0)
 	{
 		RightTrackThrottle = RightTrackThrottle - Throw;
 	}
 	else
 	{
-		LeftTrackThrottle = LeftTrackThrottle + Throw;
+		LeftTrackThrottle = LeftTrackThrottle + Throw; // As Throw will be -ve here
 	}
 }
 
@@ -85,4 +81,3 @@ void UTankMovementComponent::DriveRightTrack(float Throttle)
 {
 	RightTrackThrottle = FMath::Clamp<float>(RightTrackThrottle + Throttle, -1, 1);
 }
-

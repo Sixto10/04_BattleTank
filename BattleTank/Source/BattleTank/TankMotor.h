@@ -28,6 +28,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	float TrackMaxDrivingForce = 50000;
 
-	float Throttle = 0;
+	// Current throttle level, regardles of in air or on ground
+	UPROPERTY(VisibleAnywhere)
+	float CurrentThrottle = 0;
 
+	// Is this track on the ground?
+	UPROPERTY(VisibleAnywhere)
+	bool isInContact = true; // TODO default to false later
 };

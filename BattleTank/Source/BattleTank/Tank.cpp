@@ -24,19 +24,12 @@ void ATank::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
-{
-	Super::SetupPlayerInputComponent(InputComponent);
-
-}
-
 void ATank::AddAmmo(int Rounds)
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo + Rounds, 0, MaxAmmo);
 }
 
-int ATank::GetRoundsLeft()
+const int ATank::GetRoundsLeft()
 {
 	return CurrentAmmo;
 }

@@ -30,16 +30,19 @@ void UTankMotor::BeginPlay()
 void UTankMotor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-	auto Forward = GetOwner()->GetActorForwardVector();
-	auto Force = Forward * Throttle * TrackMaxDrivingForce;
-	auto OurLocation = GetComponentLocation();
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s"), *OurLocation.ToString());
-	GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(Force, OurLocation);
-	Throttle = 0;
+
 }
 
-void UTankMotor::SetThrottle(float Throttle)
+
+void UTankMotor::SetThrottle(float ThrottleRequest)
 {
-	this->Throttle = Throttle;
-}
+	if (isInContact)
+	{
+		CurrentThrottle = ThrottleRequest;
+		auto Forward = GetOwner()->GetActorForwardVector();
+		FVector ForceApplied = Forward * CurrentThrottle * TrackMaxDrivingForce;
+		auto OurLocation = GetComponentLocation();
+		GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(ForceApplied, OurLocation);
+	}
 
+}
