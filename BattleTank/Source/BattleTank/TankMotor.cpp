@@ -21,7 +21,7 @@ void UTankMotor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	OnComponentHit.AddDynamic(this, &UTankMotor::OnHit);
 	
 }
 
@@ -31,12 +31,23 @@ void UTankMotor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComp
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	if (HitThisFrame)
+	{
+		HitThisFrame = false;
+		IsGrounded = true;
+	}
+	else
+	{
+		IsGrounded = false;
+	}
 }
+
+
 
 
 void UTankMotor::SetThrottle(float ThrottleRequest)
 {
-	if (isInContact)
+	if (IsGrounded)
 	{
 		CurrentThrottle = ThrottleRequest;
 		auto Forward = GetOwner()->GetActorForwardVector();
@@ -45,4 +56,9 @@ void UTankMotor::SetThrottle(float ThrottleRequest)
 		GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(ForceApplied, OurLocation);
 	}
 
+}
+
+void UTankMotor::OnHit(AActor * SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	HitThisFrame = true;
 }

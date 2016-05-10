@@ -25,6 +25,10 @@ public:
 	void SetThrottle(float Throttle);
 
 private:
+	
+	UFUNCTION()
+	void OnHit(AActor* SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
 	UPROPERTY(EditAnywhere)
 	float TrackMaxDrivingForce = 50000;
 
@@ -34,5 +38,7 @@ private:
 
 	// Is this track on the ground?
 	UPROPERTY(VisibleAnywhere)
-	bool isInContact = true; // TODO default to false later
+	bool IsGrounded = false; // TODO default to false later
+
+	bool HitThisFrame = false;
 };
