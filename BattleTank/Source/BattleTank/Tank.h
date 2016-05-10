@@ -5,7 +5,7 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h" // Must be the last include
 
-
+// Represents the physical tank, and allows tank-level interaction such as reloading
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {

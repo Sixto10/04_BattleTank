@@ -35,14 +35,13 @@ void UTankMotor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComp
 	{
 		HitThisFrame = false;
 		IsGrounded = true;
+		ApplySidewaysFriction(DeltaTime);
 	}
 	else
 	{
 		IsGrounded = false;
 	}
 }
-
-
 
 
 void UTankMotor::SetThrottle(float ThrottleRequest)
@@ -61,4 +60,15 @@ void UTankMotor::SetThrottle(float ThrottleRequest)
 void UTankMotor::OnHit(AActor * SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
 	HitThisFrame = true;
+}
+
+
+// Applies friction force for this frame
+void UTankMotor::ApplySidewaysFriction(float DeltaTime)
+{
+	auto TankRightVector = GetOwner()->GetActorRightVector();
+	auto SlippageSpeed = Dot3(GetOwner()->GetVelocity(), TankRightVector);
+	auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * TankRightVector;
+	auto CorrectionForce = (GetOwner()->GetRootPrimitiveComponent()->GetMass() * CorrectionAcceleration) / 2;
+	GetOwner()->GetRootPrimitiveComponent()->AddForce(CorrectionForce);
 }

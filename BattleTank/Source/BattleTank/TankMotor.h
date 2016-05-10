@@ -5,7 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "TankMotor.generated.h"
 
-
+// Represent the tank engine and tracks
+// Responsible for translating throttle values into track forces
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankMotor : public UStaticMeshComponent
 {
@@ -41,4 +42,6 @@ private:
 	bool IsGrounded = false; // TODO default to false later
 
 	bool HitThisFrame = false;
+
+	void ApplySidewaysFriction(float DeltaTime);
 };
