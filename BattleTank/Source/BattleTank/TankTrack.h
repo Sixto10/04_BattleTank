@@ -46,7 +46,7 @@ private:
 
 	// Is this track on the ground?
 	UPROPERTY(VisibleAnywhere)
-	bool IsGrounded = false; // TODO default to false later
+	bool IsGrounded = false;
 
 	bool HitThisFrame = false;
 

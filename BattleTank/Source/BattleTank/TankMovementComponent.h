@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRightThrottleRequest, float, Thro
 // Responsible for aggregating input for player (FBW and manual), and from the AI
 // Maps these inputs to left and right track throttle values
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent // TODO change class
+class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 {
 	GENERATED_BODY()
 
@@ -51,10 +51,6 @@ public:
 	// Delegates throttle action to TankMotor component
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnRightThrottleRequest OnRightThrottleRequest;
-
-	// TODO factor out
-	UPROPERTY(BlueprintReadWrite, Category = PlayerMusicSkill)
-	FVector ForwardDriver = FVector::ZeroVector;
 
 private:
 	// State kept here as this is where we aggregrate calls from various sources
