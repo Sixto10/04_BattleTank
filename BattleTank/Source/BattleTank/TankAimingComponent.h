@@ -31,8 +31,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnBarrelElevateRequest OnBarrelElevateRequest;
 	
-	// For FBW control
-	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetAimIntention(FVector WorldSpaceAim);
 
 	// Takes barrel reference

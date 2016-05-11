@@ -3,7 +3,11 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
-#include "TankMovementComponent.h" // As is a required component
+
+// Import required components
+#include "TankMovementComponent.h"
+#include "TankAimingComponent.h"
+
 #include "Tank.generated.h" // Must be the last include
 
 // Represents the physical tank, and allows tank-level interaction such as reloading
@@ -29,12 +33,17 @@ public:
 	const int GetRoundsLeft();
 
 	// For forwarding to relevant component
+	UFUNCTION(BlueprintCallable, Category = Control)
 	void SetAimIntention(FVector WorldSpaceAim);
 
-protected:
+protected: // TODO consider making these into a pure getterz
 	// Store required movement component
 	UPROPERTY(BlueprintReadOnly)
-	UTankMovementComponent* TankMovementComponent = nullptr; // TODO consider making this into a pure getter
+	UTankMovementComponent* TankMovementComponent = nullptr; 
+	
+	// Store required movement component
+	UPROPERTY(BlueprintReadOnly)
+	UTankAimingComponent* TankAimingComponent = nullptr;
 
 private:
 	UPROPERTY(EditAnywhere, Category=Weapons)
