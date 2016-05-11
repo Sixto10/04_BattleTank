@@ -53,9 +53,30 @@ void UTankAimingComponent::UpdateAim()
 	if (!Barrel) {
 		return;
 	}
+	/* Code that causes rotation in the WRONG direction sometimes...
 	auto BarrelRotation = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimRequest.Rotation();
 	auto DeltaRotation = AimAsRotator - BarrelRotation;
+	*/
+
+	auto CurrentAim = AimRequest.ToOrientationQuat();
+	auto BarrelRotation = Barrel->GetForwardVector().ToOrientationQuat();
+
+	/*
+	Derivation of matrix multipication...
+	B = BarrelRotation,  A = AimRequest,  D = Delta
+	
+	BarrelRotation rotated by some Delta gives the AimRequest direction...
+	B		D =			A
+	B^-1 B	D = B^-1	A
+			D = B^-1	A
+	
+	B^-1 B is the identity matrix as rotations are always invertible
+	*/
+	auto Delta = BarrelRotation.Inverse() * CurrentAim;
+
+	auto DeltaRotation = Delta.Rotator();
+
 	RotateTurret(DeltaRotation.Yaw);
 	ElevateBarrel(DeltaRotation.Pitch);
 }
