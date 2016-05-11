@@ -9,3 +9,5 @@ void UTankBarrel::Elevate(float Speed)
 	auto Rotation = FRotator(PitchThisFrame, 0, 0);
 	AddLocalRotation(Rotation);
 }
+
+// TODO clamp movement range
