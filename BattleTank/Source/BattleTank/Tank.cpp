@@ -38,5 +38,5 @@ const int ATank::GetRoundsLeft()
 
 void ATank::SetAimIntention(FVector WorldSpaceAim)
 {
-	
+	TankAimingComponent->SetAimIntention(WorldSpaceAim); // Delegate to tank
 }

@@ -25,6 +25,7 @@ void ATankAIController::AimAtPlayer()
 	if (ControlledTank)
 	{
 		auto AimIntention = PlayerLocation - ControlledTank->GetActorLocation();
+		UE_LOG(LogTemp, Warning, TEXT("Aim direction: %s"), *AimIntention.ToString())
 		ControlledTank->SetAimIntention(AimIntention);
 	}
 }

@@ -20,12 +20,6 @@ void UTankAimingComponent::SetBarrelReference(USceneComponent* BarrelInBP)
 	Barrel = BarrelInBP; // Sam thought of this, I said we should do this->Barrel = Barrel but he wouldn't listen.
 }
 
-// Starts the FBW system slewing towards aim point
-void UTankAimingComponent::SetAimIntention(FVector WorldSpaceAim)
-{
-	AimRequest = WorldSpaceAim;
-}
-
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
@@ -47,6 +41,13 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 	ElevateSpeed = 0;
 }
 
+// Starts the FBW system slewing towards aim point
+void UTankAimingComponent::SetAimIntention(FVector WorldSpaceAim)
+{
+	AimRequest = WorldSpaceAim;
+}
+
+// TODO make rotate shortest way
 void UTankAimingComponent::UpdateAim()
 {
 	if (!Barrel) {
