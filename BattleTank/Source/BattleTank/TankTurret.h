@@ -24,5 +24,4 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	float MaxDegreesPerSecond = 20;
-	
 };

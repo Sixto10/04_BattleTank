@@ -24,4 +24,10 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	float MaxDegreesPerSecond = 20;
+
+	UPROPERTY(EditAnywhere)
+	float MaxElevationDegrees = 40;
+
+	UPROPERTY(EditAnywhere)
+	float MinElevationDegrees = 0;
 };
