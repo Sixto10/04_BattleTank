@@ -1,33 +1,34 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
-#include "TankMotor.h"
+#include "TankTrack.h"
 
 
 // Sets default values for this component's properties
-UTankMotor::UTankMotor()
+UTankTrack::UTankTrack()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-
+	SetNotifyRigidBodyCollision(true); // Same as "Simulation Generates Hit Events"
 	// ...
 }
 
 
 // Called when the game starts
-void UTankMotor::BeginPlay()
+void UTankTrack::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnComponentHit.AddDynamic(this, &UTankMotor::OnHit);
+	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 	
+
 }
 
 
 // Called every frame
-void UTankMotor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
+void UTankTrack::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
@@ -44,7 +45,7 @@ void UTankMotor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComp
 }
 
 
-void UTankMotor::SetThrottle(float ThrottleRequest)
+void UTankTrack::SetThrottle(float ThrottleRequest)
 {
 	if (IsGrounded)
 	{
@@ -57,14 +58,14 @@ void UTankMotor::SetThrottle(float ThrottleRequest)
 
 }
 
-void UTankMotor::OnHit(AActor * SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+void UTankTrack::OnHit(AActor * SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
 	HitThisFrame = true;
 }
 
 
 // Applies friction force for this frame
-void UTankMotor::ApplySidewaysFriction(float DeltaTime)
+void UTankTrack::ApplySidewaysFriction(float DeltaTime)
 {
 	auto TankRightVector = GetOwner()->GetActorRightVector();
 	auto SlippageSpeed = Dot3(GetOwner()->GetVelocity(), TankRightVector);

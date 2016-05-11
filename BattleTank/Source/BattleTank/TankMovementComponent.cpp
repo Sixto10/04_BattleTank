@@ -61,14 +61,8 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
-	if (Throw > 0)
-	{
-		RightTrackThrottle = RightTrackThrottle - Throw;
-	}
-	else
-	{
-		LeftTrackThrottle = LeftTrackThrottle + Throw; // As Throw will be -ve here
-	}
+	DriveLeftTrack(+Throw);
+	DriveRightTrack(-Throw);
 }
 
 void UTankMovementComponent::DriveLeftTrack(float Throttle)

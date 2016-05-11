@@ -15,7 +15,7 @@ class BATTLETANK_API UTankMovementComponent : public UFloatingPawnMovement
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UTankMovementComponent();
 

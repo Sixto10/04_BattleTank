@@ -3,18 +3,25 @@
 #pragma once
 
 #include "Components/StaticMeshComponent.h"
-#include "TankMotor.generated.h"
+#include "TankTrack.generated.h"
+
+// We are hiding categories to keep things simple in the Details tab
+// Note use of comments to remove newline characters from macro
+UCLASS(/*
+*/	ClassGroup=(Custom),/*
+*/	meta=(BlueprintSpawnableComponent),/*
+*/	hidecategories=("Collision")/*
+*/) 
 
 // Represent the tank engine and tracks
 // Responsible for translating throttle values into track forces
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BATTLETANK_API UTankMotor : public UStaticMeshComponent
+class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UTankMotor();
+	UTankTrack();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -31,7 +38,7 @@ private:
 	void OnHit(AActor* SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 	UPROPERTY(EditAnywhere)
-	float TrackMaxDrivingForce = 50000;
+	float TrackMaxDrivingForce = 50000000;
 
 	// Current throttle level, regardles of in air or on ground
 	UPROPERTY(VisibleAnywhere)
