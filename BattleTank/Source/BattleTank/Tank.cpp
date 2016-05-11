@@ -3,13 +3,14 @@
 #include "BattleTank.h"
 #include "Tank.h"
 
+// TODO protect ALL null pointers?
 
 // Sets default values
 ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Tank Movement Component"));
 }
 
 // Called when the game starts or when spawned
@@ -32,4 +33,9 @@ void ATank::AddAmmo(int Rounds)
 const int ATank::GetRoundsLeft()
 {
 	return CurrentAmmo;
+}
+
+void ATank::SetAimIntention(FVector WorldSpaceAim)
+{
+	
 }

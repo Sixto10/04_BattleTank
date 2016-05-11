@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "TankAIController.h"
+#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -13,5 +14,17 @@ void ATankAIController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0); // Consider storing if slow
 	MoveToActor(Player, AcceptanceRadius);
+	AimAtPlayer();
 }
 
+void ATankAIController::AimAtPlayer()
+{
+	auto PlayerLocation = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation();
+	auto ControlledTank = Cast<ATank>(GetControlledPawn());
+
+	if (ControlledTank)
+	{
+		auto AimIntention = PlayerLocation - ControlledTank->GetActorLocation();
+		ControlledTank->SetAimIntention(AimIntention);
+	}
+}

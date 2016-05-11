@@ -18,6 +18,9 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
+	void AimAtPlayer();
+
 	UPROPERTY(EditAnywhere, Category = "AI Setup")
 	float AcceptanceRadius = 5.0;
+
 };
