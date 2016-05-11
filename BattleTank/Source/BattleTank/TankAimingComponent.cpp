@@ -15,6 +15,24 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
+void UTankAimingComponent::SetBarrelReference(USceneComponent* BarrelInBP)
+{
+	Barrel = BarrelInBP; // Sam thought of this, I said we should do this->Barrel = Barrel but he wouldn't listen.
+}
+
+// Starts the FBW system slewing towards aim point
+void UTankAimingComponent::SetAimIntention(FVector WorldSpaceAim)
+{
+	// Calculate shortest rotation from current aim to intended aim
+	// Command Barrel and Turret to slew at max speed
+	// Stop when aligned (using cross product?)
+
+	auto BarrelRotation = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = WorldSpaceAim.Rotation();
+	auto DeltaRotation = AimAsRotator - BarrelRotation;
+	RotateTurret(DeltaRotation.Yaw);
+	ElevateBarrel(DeltaRotation.Pitch);
+}
 
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
@@ -33,6 +51,9 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 	// Pass through manual turret requests
 	OnTurretRotateRequest.Broadcast(RotateSpeed);
 	OnBarrelElevateRequest.Broadcast(ElevateSpeed);
+
+	// TODO have a way of suppressing FBW systtem under manual control
+
 
 	RotateSpeed = 0;
 	ElevateSpeed = 0;

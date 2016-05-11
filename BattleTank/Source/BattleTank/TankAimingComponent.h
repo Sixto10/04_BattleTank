@@ -31,14 +31,26 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnBarrelElevateRequest OnBarrelElevateRequest;
 
+	// For manual control
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void RotateTurret(float Speed);
 
+	// For manual control
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void ElevateBarrel(float Speed);
+
+	// For FBW control
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void SetAimIntention(FVector WorldSpaceAim);
+
+	// Takes barrel reference
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetBarrelReference(USceneComponent* BarrelInBP); // As all it needs is a transform
 
 private:
 	// State kept here as this is where we aggregrate calls from various sources
 	float RotateSpeed = 0;
 	float ElevateSpeed = 0;
+
+	USceneComponent* Barrel = nullptr;
 };
