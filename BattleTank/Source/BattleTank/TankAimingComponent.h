@@ -30,15 +30,7 @@ public:
 	// Delegates barrel elevation to barrel motors
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnBarrelElevateRequest OnBarrelElevateRequest;
-
-	// For manual control
-	UFUNCTION(BlueprintCallable, Category = Input)
-	void RotateTurret(float Speed);
-
-	// For manual control
-	UFUNCTION(BlueprintCallable, Category = Input)
-	void ElevateBarrel(float Speed);
-
+	
 	// For FBW control
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetAimIntention(FVector WorldSpaceAim);
@@ -48,6 +40,13 @@ public:
 	void SetBarrelReference(USceneComponent* BarrelInBP); // As all it needs is a transform
 
 private:
+	void UpdateAim();
+		
+	FVector AimRequest = FVector::ZeroVector;
+
+	void RotateTurret(float Speed);
+	void ElevateBarrel(float Speed);
+
 	// State kept here as this is where we aggregrate calls from various sources
 	float RotateSpeed = 0;
 	float ElevateSpeed = 0;
