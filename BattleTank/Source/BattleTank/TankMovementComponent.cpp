@@ -6,6 +6,8 @@
 
 #define OUT
 
+// TODO Code review at 720p
+
 // Sets default values for this component's properties
 UTankMovementComponent::UTankMovementComponent()
 {
@@ -34,10 +36,9 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 
 	// Pass through manual throttle requests
 	OnLeftThrottleRequest.Broadcast(LeftTrackThrottle);
-	OnRightThrottleRequest.Broadcast(RightTrackThrottle);
+	LeftTrackThrottle = 0; // "Consume" value to start fresh next frame
 
-	// TODO can we remove this and let the throttle position hold state
-	LeftTrackThrottle = 0;
+	OnRightThrottleRequest.Broadcast(RightTrackThrottle);
 	RightTrackThrottle = 0;
 }
 
@@ -48,7 +49,6 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	auto AIForwardIntention = MoveVelocity.GetSafeNormal(); // Makes into a unit vector without mutating
 	IntendMoveForward(Dot3(AIForwardIntention, TankForward)); // 
 
-	//  
 	auto AITurnIntention = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
 	IntendTurnRight(AITurnIntention);
 }

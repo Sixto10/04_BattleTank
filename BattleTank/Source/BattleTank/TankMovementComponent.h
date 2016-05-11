@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "GameFramework/FloatingPawnMovement.h"
+#include "GameFramework/NavMovementComponent.h"
 #include "TankMovementComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLeftThrottleRequest, float, Throttle);
@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRightThrottleRequest, float, Thro
 // Responsible for aggregating input for player (FBW and manual), and from the AI
 // Maps these inputs to left and right track throttle values
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BATTLETANK_API UTankMovementComponent : public UFloatingPawnMovement // TODO change class
+class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent // TODO change class
 {
 	GENERATED_BODY()
 

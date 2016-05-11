@@ -3,13 +3,13 @@
 #include "BattleTank.h"
 #include "Tank.h"
 
-// TODO protect ALL null pointers?
-
 // Sets default values
 ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Pointers not protected as in constructor, unlikely to fail
 	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement Component"));
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aim Component"));
 }

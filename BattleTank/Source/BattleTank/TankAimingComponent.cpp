@@ -47,7 +47,6 @@ void UTankAimingComponent::SetAimIntention(FVector WorldSpaceAim)
 	AimRequest = WorldSpaceAim;
 }
 
-// TODO make rotate shortest way
 void UTankAimingComponent::UpdateAim()
 {
 	if (!Barrel) {

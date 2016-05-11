@@ -36,7 +36,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Control)
 	void SetAimIntention(FVector WorldSpaceAim);
 
-protected: // TODO consider making these into a pure getterz
+protected:
 	// Store required movement component
 	UPROPERTY(BlueprintReadOnly)
 	UTankMovementComponent* TankMovementComponent = nullptr; 
