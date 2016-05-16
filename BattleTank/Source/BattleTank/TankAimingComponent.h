@@ -49,5 +49,9 @@ private:
 	float RotateSpeed = 0;
 	float ElevateSpeed = 0;
 
+	// How fast can a projectile be launched
+	UPROPERTY(EditAnywhere, Category = Dynamics)
+	float LaunchSpeed = 100000;
+
 	USceneComponent* Barrel = nullptr;
 };

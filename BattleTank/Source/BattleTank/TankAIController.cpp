@@ -24,7 +24,6 @@ void ATankAIController::AimAtPlayer()
 
 	if (ControlledTank)
 	{
-		auto AimIntention = PlayerLocation - ControlledTank->GetActorLocation();
-		ControlledTank->SetAimIntention(AimIntention);
+		ControlledTank->SetAimIntention(PlayerLocation);
 	}
 }

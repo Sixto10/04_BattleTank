@@ -44,7 +44,23 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 // Starts the FBW system slewing towards aim point
 void UTankAimingComponent::SetAimIntention(FVector WorldSpaceAim)
 {
-	AimRequest = WorldSpaceAim;
+	if (!Barrel)
+	{
+		return;
+	}
+	FVector TossVelocity;
+	FVector StartLocation = Barrel->GetComponentLocation();
+	if (UGameplayStatics::SuggestProjectileVelocity(GetOwner(), 
+		TossVelocity, 
+		StartLocation, 
+		WorldSpaceAim, 
+		LaunchSpeed, 
+		false, 
+		0, 0, 
+		ESuggestProjVelocityTraceOption::DoNotTrace))
+	{
+		AimRequest = TossVelocity.GetSafeNormal();
+	}
 }
 
 void UTankAimingComponent::UpdateAim()

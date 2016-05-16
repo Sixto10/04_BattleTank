@@ -38,11 +38,11 @@ public:
 
 protected:
 	// Store required movement component
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTankMovementComponent* TankMovementComponent = nullptr; 
 	
 	// Store required movement component
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;
 
 private:
