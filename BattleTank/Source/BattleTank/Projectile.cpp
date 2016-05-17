@@ -7,7 +7,7 @@
 // Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
@@ -23,6 +23,9 @@ AProjectile::AProjectile()
 	ImpactBlast->AttachTo(RootComponent);
 	ImpactBlast->SecondsBeforeInactive = 0;
 	ImpactBlast->bAutoActivate = false;
+
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovement"));
+	ProjectileMovement->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -36,7 +39,12 @@ void AProjectile::BeginPlay()
 void AProjectile::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+}
 
+void AProjectile::Launch(float Speed)
+{
+	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
+	ProjectileMovement->Activate();
 }
 
 void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)

@@ -25,7 +25,8 @@ void UTankAimingComponent::Fire()
 	if (ProjectileBlueprint)
 	{
 		auto Socket = FName("Projectile");
-		GetWorld()->SpawnActor<AActor>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
+		Projectile->Launch(LaunchSpeed);
 	}
 }
 

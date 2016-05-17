@@ -20,6 +20,8 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	void Launch(float Speed);
+
 private:
 	UFUNCTION()
 	void OnHit(AActor* SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
@@ -32,6 +34,8 @@ private:
 	UParticleSystemComponent *LaunchBlast = nullptr;
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent *ImpactBlast = nullptr;
+	
+	UProjectileMovementComponent *ProjectileMovement = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	float DestroyDelay = 10;
