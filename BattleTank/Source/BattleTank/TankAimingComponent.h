@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
+#include "Projectile.h"
 #include "TankAimingComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurretRotateRequest, float, Speed);
@@ -57,7 +58,7 @@ private:
 	float LaunchSpeed = 100000;
 
 	UPROPERTY(EditAnywhere, Category = Setup)
-	TSubclassOf<AActor> ProjectileBlueprint;
+	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	USceneComponent* Barrel = nullptr;
 };
