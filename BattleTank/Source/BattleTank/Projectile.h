@@ -23,6 +23,18 @@ public:
 private:
 	UFUNCTION()
 	void OnHit(AActor* SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	void OnDestroyTimerExpired();
 	
-	
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent *CollisionMesh = nullptr;
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent *LaunchBlast = nullptr;
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent *ImpactBlast = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	float DestroyDelay = 10;
+
+	bool HasExploded = false;
 };

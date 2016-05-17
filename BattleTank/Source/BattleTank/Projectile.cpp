@@ -9,14 +9,27 @@ AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
+	SetRootComponent(CollisionMesh);
+	CollisionMesh->SetNotifyRigidBodyCollision(true);
+	CollisionMesh->SetVisibility(false);
+
+	LaunchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
+	LaunchBlast->AttachTo(RootComponent);
+	LaunchBlast->SecondsBeforeInactive = 0;
+
+	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
+	ImpactBlast->AttachTo(RootComponent);
+	ImpactBlast->SecondsBeforeInactive = 0;
+	ImpactBlast->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	GetRootPrimitiveComponent()->SetNotifyRigidBodyCollision(true); //must be here because constructor is too early for this to exist yet.
-	GetRootPrimitiveComponent()->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 // Called every frame
@@ -28,8 +41,20 @@ void AProjectile::Tick( float DeltaTime )
 
 void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit"));
+	if (!HasExploded)
+	{
+		LaunchBlast->Deactivate(); //Stop the smoke trail;
+		ImpactBlast->Activate(); //Make explode;
+
+		FTimerHandle Timer;
+		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
+
+		HasExploded = true; //else subsequent collisions will cause another explosion;
+	}
 }
 
 
-
+void AProjectile::OnDestroyTimerExpired()
+{
+	Destroy();
+}
