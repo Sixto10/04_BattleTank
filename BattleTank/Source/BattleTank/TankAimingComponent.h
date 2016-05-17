@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(USceneComponent* BarrelInBP); // As all it needs is a transform
 
+	UFUNCTION(BlueprintCallable, Category = Dynamics)
+	void Fire();
+
 private:
 	void UpdateAim();
 		
@@ -52,6 +55,9 @@ private:
 	// How fast can a projectile be launched
 	UPROPERTY(EditAnywhere, Category = Dynamics)
 	float LaunchSpeed = 100000;
+
+	UPROPERTY(EditAnywhere, Category = Setup)
+	TSubclassOf<AActor> ProjectileBlueprint;
 
 	USceneComponent* Barrel = nullptr;
 };

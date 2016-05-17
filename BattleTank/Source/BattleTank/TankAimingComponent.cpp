@@ -20,6 +20,15 @@ void UTankAimingComponent::SetBarrelReference(USceneComponent* BarrelInBP)
 	Barrel = BarrelInBP; // Sam thought of this, I said we should do this->Barrel = Barrel but he wouldn't listen.
 }
 
+void UTankAimingComponent::Fire()
+{
+	if (ProjectileBlueprint)
+	{
+		auto Socket = FName("Projectile");
+		GetWorld()->SpawnActor<AActor>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
+	}
+}
+
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
