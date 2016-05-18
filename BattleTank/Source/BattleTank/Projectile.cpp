@@ -44,35 +44,42 @@ void AProjectile::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
-void AProjectile::Launch(float Speed)
+void AProjectile::LaunchProjectile(float Speed)
 {
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovement->Activate();
+	OnLaunchProjectile();
 }
 
 void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
 	if (!HasExploded)
 	{
-		LaunchBlast->Deactivate(); //Stop the smoke trail;
-		ImpactBlast->Activate(); //Make explode;
-		ExplosionForce->FireImpulse(); //Force impact;
-
-		//Need to explicitly set so that ApplyRadialDamage always works. Otherwise seems to race with destruction of root comp.
-		SetRootComponent(ImpactBlast);
-		CollisionMesh->DestroyComponent();
-
-		UGameplayStatics::ApplyRadialDamage(this,
-			0.2,
-			GetActorLocation(),
-			ExplosionForce->Radius,
-			UDamageType::StaticClass(), TArray<AActor *>()); //Inflict damage
-
-		FTimerHandle Timer;
-		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
-
-		HasExploded = true; //else subsequent collisions will cause another explosion;
+		ExplodeProjectile();
 	}
+}
+
+void AProjectile::ExplodeProjectile()
+{
+	LaunchBlast->Deactivate(); //Stop the smoke trail;
+	ImpactBlast->Activate(); //Make explode;
+	ExplosionForce->FireImpulse(); //Force impact;
+
+								   //Need to explicitly set so that ApplyRadialDamage always works. Otherwise seems to race with destruction of root comp.
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+
+	UGameplayStatics::ApplyRadialDamage(this,
+		0.2,
+		GetActorLocation(),
+		ExplosionForce->Radius,
+		UDamageType::StaticClass(), TArray<AActor *>()); //Inflict damage
+
+	FTimerHandle Timer;
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
+
+	HasExploded = true; //else subsequent collisions will cause another explosion;
+	OnExplodeProjectile();
 }
 
 

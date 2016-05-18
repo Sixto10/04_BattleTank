@@ -20,7 +20,13 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	void Launch(float Speed);
+	void LaunchProjectile(float Speed);
+	void ExplodeProjectile();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Events)
+	void OnLaunchProjectile();
+	UFUNCTION(BlueprintImplementableEvent, Category = Events)
+	void OnExplodeProjectile();
 
 private:
 	UFUNCTION()
