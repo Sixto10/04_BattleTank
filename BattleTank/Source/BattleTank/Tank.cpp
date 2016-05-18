@@ -40,3 +40,8 @@ void ATank::SetAimIntention(FVector WorldSpaceAim)
 {
 	TankAimingComponent->SetAimIntention(WorldSpaceAim); // Delegate to tank
 }
+
+const float ATank::GetHealth()
+{
+	return Health;
+}

@@ -35,6 +35,9 @@ public:
 	// For forwarding to relevant component
 	UFUNCTION(BlueprintCallable, Category = Control)
 	void SetAimIntention(FVector WorldSpaceAim);
+	
+	UFUNCTION(BlueprintPure, Category = GamePlay)
+	const float GetHealth();
 
 protected:
 	// Store required movement component
@@ -51,4 +54,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category=Weapons)
 	int CurrentAmmo = 0;
+
+	float Health = 1.0;
 };
