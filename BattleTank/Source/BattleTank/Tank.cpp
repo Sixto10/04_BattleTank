@@ -45,3 +45,22 @@ const float ATank::GetHealth()
 {
 	return Health;
 }
+
+void ATank::BlowUpTank()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Blowing up tank"));
+	DetachFromControllerPendingDestroy();
+	FindComponentByClass<UParticleSystemComponent>()->Activate();
+}
+
+float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	auto DamageToApply = FMath::Clamp(DamageAmount, 0.0f, Health);
+	Health -= DamageToApply;
+	if (FMath::IsNearlyZero(Health))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tank should blow up"));
+		BlowUpTank();
+	}
+	return DamageToApply;
+}

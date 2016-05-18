@@ -39,6 +39,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = GamePlay)
 	const float GetHealth();
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 protected:
 	// Store required movement component
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
@@ -56,4 +57,6 @@ private:
 	int CurrentAmmo = 0;
 
 	float Health = 1.0;
+
+	void BlowUpTank();
 };

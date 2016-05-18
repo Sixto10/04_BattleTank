@@ -58,6 +58,12 @@ void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent
 		ImpactBlast->Activate(); //Make explode;
 		ExplosionForce->FireImpulse(); //Force impact;
 
+		UGameplayStatics::ApplyRadialDamage(this, 
+			0.2, 
+			GetActorLocation(),
+			ExplosionForce->Radius, 
+			UDamageType::StaticClass(), TArray<AActor *>()); //Inflict damage
+
 		FTimerHandle Timer;
 		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
 
