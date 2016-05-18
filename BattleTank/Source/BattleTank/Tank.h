@@ -40,6 +40,11 @@ public:
 	const float GetHealth();
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
+	
+	bool Aiming();
+
+	void Fire();
+
 protected:
 	// Store required movement component
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)

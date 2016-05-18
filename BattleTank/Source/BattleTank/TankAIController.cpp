@@ -15,6 +15,12 @@ void ATankAIController::Tick(float DeltaTime)
 	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0); // Consider storing if slow
 	MoveToActor(Player, AcceptanceRadius);
 	AimAtPlayer();
+	auto ControlledTank = Cast<ATank>(GetControlledPawn());
+	if (!HasFired && !ControlledTank->Aiming())
+	{
+		HasFired = true;
+		ControlledTank->Fire();
+	}
 }
 
 void ATankAIController::AimAtPlayer()

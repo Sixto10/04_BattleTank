@@ -30,6 +30,12 @@ void UTankAimingComponent::Fire()
 	}
 }
 
+bool UTankAimingComponent::Aiming()
+{
+	auto BarrelForward = Barrel->GetForwardVector();
+	return !AimRequest.Equals(BarrelForward, 0.01);
+}
+
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {

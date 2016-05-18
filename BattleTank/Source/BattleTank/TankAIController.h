@@ -23,4 +23,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "AI Setup")
 	float AcceptanceRadius = 5.0;
 
+	bool HasFired = false;
 };

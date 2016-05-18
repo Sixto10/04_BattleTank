@@ -41,6 +41,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Dynamics)
 	void Fire();
 
+	bool Aiming();
+
 private:
 	void UpdateAim();
 		

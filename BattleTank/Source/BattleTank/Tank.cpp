@@ -64,3 +64,13 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	}
 	return DamageToApply;
 }
+
+bool ATank::Aiming()
+{
+	return TankAimingComponent->Aiming();
+}
+
+void ATank::Fire()
+{
+	return TankAimingComponent->Fire();
+}
