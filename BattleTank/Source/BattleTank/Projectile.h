@@ -34,7 +34,9 @@ private:
 	UParticleSystemComponent *LaunchBlast = nullptr;
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent *ImpactBlast = nullptr;
-	
+	UPROPERTY(VisibleAnywhere)
+	URadialForceComponent *ExplosionForce = nullptr;
+
 	UProjectileMovementComponent *ProjectileMovement = nullptr;
 
 	UPROPERTY(EditAnywhere)

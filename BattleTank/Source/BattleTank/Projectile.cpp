@@ -22,7 +22,10 @@ AProjectile::AProjectile()
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
 	ImpactBlast->AttachTo(RootComponent);
 	ImpactBlast->SecondsBeforeInactive = 0;
-	ImpactBlast->bAutoActivate = false;
+	ImpactBlast->bAutoActivate = false;	
+	
+	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+	ExplosionForce->AttachTo(RootComponent);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovement"));
 	ProjectileMovement->bAutoActivate = false;
@@ -53,9 +56,12 @@ void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent
 	{
 		LaunchBlast->Deactivate(); //Stop the smoke trail;
 		ImpactBlast->Activate(); //Make explode;
+		ExplosionForce->FireImpulse(); //Force impact;
 
 		FTimerHandle Timer;
 		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
+
+		RootComponent->DestroyComponent();
 
 		HasExploded = true; //else subsequent collisions will cause another explosion;
 	}
