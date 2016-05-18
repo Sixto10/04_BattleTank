@@ -3,6 +3,8 @@
 #pragma once
 
 #include "AIController.h"
+#include "Tank.h"
+
 #include "TankAIController.generated.h"
 
 /**
@@ -18,10 +20,14 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
-	void AimAtPlayer();
+	void AimAtPlayer(ATank* Player);
+	bool GetPlayerPawn(ATank** outTank);
 
 	UPROPERTY(EditAnywhere, Category = "AI Setup")
 	float AcceptanceRadius = 5.0;
 
-	bool HasFired = false;
+	float LastFireTime = 0;
+
+	UPROPERTY(EditAnywhere, Category = "AI Setup")
+	float FiringRate = 5;
 };

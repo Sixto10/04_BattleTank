@@ -58,16 +58,18 @@ void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent
 		ImpactBlast->Activate(); //Make explode;
 		ExplosionForce->FireImpulse(); //Force impact;
 
-		UGameplayStatics::ApplyRadialDamage(this, 
-			0.2, 
+		//Need to explicitly set so that ApplyRadialDamage always works. Otherwise seems to race with destruction of root comp.
+		SetRootComponent(ImpactBlast);
+		CollisionMesh->DestroyComponent();
+
+		UGameplayStatics::ApplyRadialDamage(this,
+			0.2,
 			GetActorLocation(),
-			ExplosionForce->Radius, 
+			ExplosionForce->Radius,
 			UDamageType::StaticClass(), TArray<AActor *>()); //Inflict damage
 
 		FTimerHandle Timer;
 		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
-
-		RootComponent->DestroyComponent();
 
 		HasExploded = true; //else subsequent collisions will cause another explosion;
 	}

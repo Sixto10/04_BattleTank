@@ -48,8 +48,18 @@ const float ATank::GetHealth()
 
 void ATank::BlowUpTank()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Blowing up tank"));
-	DetachFromControllerPendingDestroy();
+	if (!GetController()) {
+		return;
+	}
+	if (GetController()->GetClass()->IsChildOf(APlayerController::StaticClass()))
+	{
+		auto Controller = GetController()->CastToPlayerController();
+		Controller->StartSpectatingOnly();
+	}
+	else
+	{
+		DetachFromControllerPendingDestroy();
+	}
 	FindComponentByClass<UParticleSystemComponent>()->Activate();
 }
 
@@ -59,7 +69,6 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	Health -= DamageToApply;
 	if (FMath::IsNearlyZero(Health))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank should blow up"));
 		BlowUpTank();
 	}
 	return DamageToApply;

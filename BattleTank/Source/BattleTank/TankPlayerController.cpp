@@ -10,7 +10,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector HitLocation;
-	if (CastSightRay(HitLocation))
+	if (CastSightRay(HitLocation) && GetPawn())
 	{
 		Cast<ATank>(GetPawn())->SetAimIntention(HitLocation);
 	}
