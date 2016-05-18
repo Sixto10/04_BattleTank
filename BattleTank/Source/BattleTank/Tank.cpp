@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "Tank.h"
+#include "TankPlayerState.h"
 
 // Sets default values
 ATank::ATank()
@@ -55,6 +56,8 @@ void ATank::BlowUpTank()
 	{
 		auto Controller = GetController()->CastToPlayerController();
 		Controller->StartSpectatingOnly();
+		auto PlayerState = Cast<ATankPlayerState>(Controller->PlayerState);
+		PlayerState->IsDead = true;
 	}
 	else
 	{
