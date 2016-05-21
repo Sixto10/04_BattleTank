@@ -11,17 +11,15 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
-	SetRootComponent(CollisionMesh);
+	SetRootComponent(CollisionMesh); // Projectile Movement expecting this
 	CollisionMesh->SetNotifyRigidBodyCollision(true);
 	CollisionMesh->SetVisibility(false);
 
 	LaunchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
 	LaunchBlast->AttachTo(RootComponent);
-	LaunchBlast->SecondsBeforeInactive = 0;
 
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
 	ImpactBlast->AttachTo(RootComponent);
-	ImpactBlast->SecondsBeforeInactive = 0;
 	ImpactBlast->bAutoActivate = false;	
 	
 	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
@@ -53,10 +51,7 @@ void AProjectile::LaunchProjectile(float Speed)
 
 void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	if (!HasExploded)
-	{
-		ExplodeProjectile();
-	}
+	ExplodeProjectile();
 }
 
 void AProjectile::ExplodeProjectile()
@@ -70,7 +65,7 @@ void AProjectile::ExplodeProjectile()
 	CollisionMesh->DestroyComponent();
 
 	UGameplayStatics::ApplyRadialDamage(this,
-		0.2,
+		ProjectileDamage,
 		GetActorLocation(),
 		ExplosionForce->Radius,
 		UDamageType::StaticClass(), TArray<AActor *>()); //Inflict damage
@@ -78,7 +73,6 @@ void AProjectile::ExplodeProjectile()
 	FTimerHandle Timer;
 	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
 
-	HasExploded = true; //else subsequent collisions will cause another explosion;
 	OnExplodeProjectile();
 }
 

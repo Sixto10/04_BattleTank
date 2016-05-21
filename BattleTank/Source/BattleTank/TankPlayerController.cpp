@@ -29,10 +29,10 @@ bool ATankPlayerController::CastSightRay(FVector &HitLocation)
 	{
 		FHitResult HitResult;
 		auto StartLocation = PlayerCameraManager->GetCameraLocation();
-		auto EndLocation = StartLocation + WorldDirection * 1000000;
+		auto EndLocation = StartLocation + WorldDirection * LineTraceRange;
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility)) {
 			HitLocation = HitResult.Location;
-			DrawDebugPoint(GetWorld(), HitLocation, 10, FColor(255, 0, 255), false, 0.5);
+			DrawDebugPoint(GetWorld(), HitLocation, 10, FColor(255, 0, 255), false, 0.0);
 			return true;
 		}
 	}

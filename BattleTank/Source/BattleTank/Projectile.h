@@ -45,8 +45,10 @@ private:
 
 	UProjectileMovementComponent *ProjectileMovement = nullptr;
 
+	// To allow impact animation to fully play-out
 	UPROPERTY(EditAnywhere)
 	float DestroyDelay = 10;
 
-	bool HasExploded = false;
+	UPROPERTY(EditAnywhere)
+	int ProjectileDamage = 20;
 };

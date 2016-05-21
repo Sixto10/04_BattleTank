@@ -17,5 +17,10 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
-	bool CastSightRay(FVector &HitLocation);
+	// Returns an OUT parameter, and true if hit
+	bool CastSightRay(FVector &HitLocation); //		TODO review
+
+	// Determines when the aiming line trace stops looking for a hit
+	UPROPERTY(EditAnywhere)
+	float LineTraceRange = 1000000;
 };

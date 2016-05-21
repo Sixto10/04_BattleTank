@@ -37,7 +37,7 @@ public:
 	void SetAimIntention(FVector WorldSpaceAim);
 	
 	UFUNCTION(BlueprintPure, Category = GamePlay)
-	const float GetHealth();
+	const float GetHealthPercent(); // Discuss
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	
@@ -55,13 +55,17 @@ protected:
 	UTankAimingComponent* TankAimingComponent = nullptr;
 
 private:
-	UPROPERTY(EditAnywhere, Category=Weapons)
+	UPROPERTY(EditAnywhere, Category=Setup)
 	int MaxAmmo = 10;
 
-	UPROPERTY(VisibleAnywhere, Category=Weapons)
+	UPROPERTY(VisibleAnywhere, Category= Setup)
 	int CurrentAmmo = 0;
 
-	float Health = 1.0;
+	UPROPERTY(EditAnywhere, Category = Setup)
+	int StartingHealth = 100;
+
+	UPROPERTY(VisibleAnywhere, Category = Setup)
+	int CurrentHealth = StartingHealth;
 
 	void BlowUpTank();
 };

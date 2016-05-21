@@ -8,7 +8,7 @@ void ATankAIController::BeginPlay()
 	Super::BeginPlay();
 }
 
-bool ATankAIController::GetPlayerPawn(ATank** outTank)
+const bool ATankAIController::GetPlayerPawn(ATank** outTank)
 {
 	auto PlayerPawn = UGameplayStatics::GetPlayerController(this, 0)->GetPawn();
 	if (!PlayerPawn)

@@ -21,7 +21,7 @@ public:
 
 private:
 	void AimAtPlayer(ATank* Player);
-	bool GetPlayerPawn(ATank** outTank);
+	const bool GetPlayerPawn(ATank** outTank); // TODO review
 
 	UPROPERTY(EditAnywhere, Category = "AI Setup")
 	float AcceptanceRadius = 5.0;

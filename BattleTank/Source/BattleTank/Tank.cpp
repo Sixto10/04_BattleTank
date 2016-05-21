@@ -42,9 +42,9 @@ void ATank::SetAimIntention(FVector WorldSpaceAim)
 	TankAimingComponent->SetAimIntention(WorldSpaceAim); // Delegate to tank
 }
 
-const float ATank::GetHealth()
+const float ATank::GetHealthPercent()
 {
-	return Health;
+	return (float)CurrentHealth / (float)StartingHealth;
 }
 
 void ATank::BlowUpTank()
@@ -68,9 +68,12 @@ void ATank::BlowUpTank()
 
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
-	auto DamageToApply = FMath::Clamp(DamageAmount, 0.0f, Health);
-	Health -= DamageToApply;
-	if (FMath::IsNearlyZero(Health))
+	// We want hit points so we're clear on when health is zero
+	int DamagePoints = FMath::Round(DamageAmount);
+
+	auto DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
+	CurrentHealth -= DamageToApply;
+	if (CurrentHealth <= 0)
 	{
 		BlowUpTank();
 	}
