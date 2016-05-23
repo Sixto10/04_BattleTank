@@ -15,5 +15,5 @@ class BATTLETANK_API ATankPlayerState : public APlayerState
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category=GamePlay)
-	bool IsDead = false;
+	bool IsDead = false; // TODO Red FLAG. Is just hitpoints!
 };

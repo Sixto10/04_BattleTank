@@ -19,9 +19,11 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	void FireIfReady();
+
 private:
 	void AimAtPlayer(ATank* Player);
-	const bool GetPlayerPawn(ATank** outTank); // TODO review
+	ATank* GetPlayerTank() const;
 
 	UPROPERTY(EditAnywhere, Category = "AI Setup")
 	float AcceptanceRadius = 5.0;
