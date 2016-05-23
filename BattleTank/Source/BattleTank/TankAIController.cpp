@@ -30,7 +30,7 @@ void ATankAIController::Tick(float DeltaTime)
 		AimAtPlayer(Player);
 		auto ControlledTank = Cast<ATank>(GetControlledPawn());
 		auto TimeSinceLastFire = FPlatformTime::Seconds() - LastFireTime;
-		if (TimeSinceLastFire > FiringRate && !ControlledTank->Aiming())
+		if (TimeSinceLastFire > FiringRate && !ControlledTank->IsBarrelMoving())
 		{
 			LastFireTime = FPlatformTime::Seconds();
 			ControlledTank->Fire();

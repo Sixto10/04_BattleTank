@@ -49,17 +49,20 @@ const float ATank::GetHealthPercent()
 
 void ATank::BlowUpTank()
 {
+	// Blown-up tanks have no controller
 	if (!GetController()) {
 		return;
 	}
-	if (GetController()->GetClass()->IsChildOf(APlayerController::StaticClass()))
+
+	bool bIsPlayer = GetController()->GetClass()->IsChildOf(APlayerController::StaticClass());
+	if (bIsPlayer)
 	{
 		auto Controller = GetController()->CastToPlayerController();
 		Controller->StartSpectatingOnly();
 		auto PlayerState = Cast<ATankPlayerState>(Controller->PlayerState);
-		PlayerState->IsDead = true;
+		PlayerState->IsDead = true; // 
 	}
-	else
+	else // AI tank
 	{
 		DetachFromControllerPendingDestroy();
 	}
@@ -80,9 +83,10 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	return DamageToApply;
 }
 
-bool ATank::Aiming()
+const bool ATank::IsBarrelMoving()
 {
-	return TankAimingComponent->Aiming();
+	// Delegate to aiming component
+	return TankAimingComponent->IsBarrelMoving();
 }
 
 void ATank::Fire()

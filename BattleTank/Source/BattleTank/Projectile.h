@@ -23,10 +23,12 @@ public:
 	void LaunchProjectile(float Speed);
 	void ExplodeProjectile();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = Events)
-	void OnLaunchProjectile();
-	UFUNCTION(BlueprintImplementableEvent, Category = Events)
-	void OnExplodeProjectile();
+	UFUNCTION(BlueprintImplementableEvent, Category = Events, meta = (DisplayName = "On Launch"))
+	void BroadcastBPLaunchEvent();
+
+	// Event is still referencecd by the method name, so can't rename without breaking link
+	UFUNCTION(BlueprintImplementableEvent, Category = Events, meta = (DisplayName = "On Explode"))
+	void BroadcastBPExplodeEvent();
 
 private:
 	UFUNCTION()

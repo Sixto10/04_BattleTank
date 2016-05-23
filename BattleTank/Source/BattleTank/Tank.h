@@ -41,7 +41,7 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	
-	bool Aiming();
+	const bool IsBarrelMoving();
 
 	void Fire();
 

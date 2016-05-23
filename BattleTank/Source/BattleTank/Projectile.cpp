@@ -46,7 +46,7 @@ void AProjectile::LaunchProjectile(float Speed)
 {
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovement->Activate();
-	OnLaunchProjectile();
+	BroadcastBPLaunchEvent();
 }
 
 void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
@@ -60,7 +60,7 @@ void AProjectile::ExplodeProjectile()
 	ImpactBlast->Activate(); //Make explode;
 	ExplosionForce->FireImpulse(); //Force impact;
 
-								   //Need to explicitly set so that ApplyRadialDamage always works. Otherwise seems to race with destruction of root comp.
+	//Need to explicitly set so that ApplyRadialDamage always works. Otherwise seems to race with destruction of root comp.
 	SetRootComponent(ImpactBlast);
 	CollisionMesh->DestroyComponent();
 
@@ -68,12 +68,14 @@ void AProjectile::ExplodeProjectile()
 		ProjectileDamage,
 		GetActorLocation(),
 		ExplosionForce->Radius,
-		UDamageType::StaticClass(), TArray<AActor *>()); //Inflict damage
+		UDamageType::StaticClass(),
+		TArray<AActor *>() // Ignore no actors
+	);
 
 	FTimerHandle Timer;
 	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
 
-	OnExplodeProjectile();
+	BroadcastBPExplodeEvent();
 }
 
 
