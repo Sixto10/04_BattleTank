@@ -10,13 +10,16 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector HitLocation;
-	if (CastSightRay(HitLocation) && GetPawn())
+	// TODO solve issue where aiming at sky slews barrel strangely
+	// EXERCISE: Change aiming reticule to UI element linked to code
+	if (GetPawn() && CastSightRay(HitLocation)) // Don't set aim if detached
 	{
 		Cast<ATank>(GetPawn())->SetAimIntention(HitLocation);
+		DrawDebugPoint(GetWorld(), HitLocation, 10, FColor(255, 0, 255), false, 0.0);
 	}
 }
 
-bool ATankPlayerController::CastSightRay(FVector &HitLocation)
+const bool ATankPlayerController::CastSightRay(FVector &HitLocation)
 {
 	int32 sizeX;
 	int32 sizeY;
@@ -32,7 +35,6 @@ bool ATankPlayerController::CastSightRay(FVector &HitLocation)
 		auto EndLocation = StartLocation + WorldDirection * LineTraceRange;
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility)) {
 			HitLocation = HitResult.Location;
-			DrawDebugPoint(GetWorld(), HitLocation, 10, FColor(255, 0, 255), false, 0.0);
 			return true;
 		}
 	}

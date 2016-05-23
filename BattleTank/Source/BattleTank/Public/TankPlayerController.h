@@ -18,7 +18,7 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 
 private:
 	// Returns an OUT parameter, and true if hit
-	bool CastSightRay(FVector &HitLocation); //		TODO review
+	const bool CastSightRay(FVector &HitLocation); //		TODO review
 
 	// Determines when the aiming line trace stops looking for a hit
 	UPROPERTY(EditAnywhere)
