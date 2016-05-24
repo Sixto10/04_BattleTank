@@ -37,6 +37,7 @@ public:
 	// Signature comes from engine code
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	
+	UFUNCTION(BlueprintCallable, Category = Control)
 	void Fire();
 	
 	UPROPERTY(BlueprintAssignable)

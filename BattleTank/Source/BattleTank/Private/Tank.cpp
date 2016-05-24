@@ -62,6 +62,9 @@ bool ATank::IsBarrelMoving() const
 
 void ATank::Fire()
 {
-	// TODO check and decrement ammo
-	TankAimingComponent->Fire();
+	if (CurrentAmmo > 0)
+	{
+		TankAimingComponent->Fire();
+		CurrentAmmo-- ; // Using pre-decrement because Bjarne Strousstrup uses it a lot
+	}
 }
