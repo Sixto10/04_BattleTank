@@ -19,48 +19,40 @@ class BATTLETANK_API ATank : public APawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	ATank();
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
-	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
-
 	UFUNCTION(BlueprintCallable, Category=Weapons)
 	void AddAmmo(int Rounds);
 
 	UFUNCTION(BlueprintPure, Category=Weapons)
 	int GetRoundsLeft() const;
 
+	UFUNCTION(BlueprintPure, Category = GamePlay)
+	float GetHealthPercent() const;
+	
+	bool IsBarrelMoving() const;
+
 	// For forwarding to relevant component
 	UFUNCTION(BlueprintCallable, Category = Control)
 	void SetAimIntention(FVector WorldSpaceAim);
 	
-	UFUNCTION(BlueprintPure, Category = GamePlay)
-	float GetHealthPercent() const; // Discuss
-
+	// Signature comes from engine code
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	
-	bool IsBarrelMoving() const;
-
 	void Fire();
-
-	/** Broadcasts whenever the layer changes */
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FTankDeathEvent OnTankDeath;
+	
 
 protected:
-	// Store required movement component
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTankMovementComponent* TankMovementComponent = nullptr; 
 	
-	// Store required movement component
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;
 
+	UPROPERTY(BlueprintAssignable)
+	FTankDeathEvent OnTankDeath;
+
 private:
+	ATank();
+	
 	UPROPERTY(EditAnywhere, Category=Setup)
 	int MaxAmmo = 10;
 

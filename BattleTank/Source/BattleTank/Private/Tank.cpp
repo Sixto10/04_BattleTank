@@ -7,24 +7,11 @@
 // Sets default values
 ATank::ATank()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 	PrimaryActorTick.bCanEverTick = false;
 
 	// Pointers not protected as in constructor, unlikely to fail
 	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement Component"));
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aim Component"));
-}
-
-// Called when the game starts or when spawned
-void ATank::BeginPlay()
-{
-	Super::BeginPlay();	
-}
-
-// Called every frame
-void ATank::Tick( float DeltaTime )
-{
-	Super::Tick( DeltaTime );
 }
 
 void ATank::AddAmmo(int Rounds)
@@ -39,7 +26,7 @@ int ATank::GetRoundsLeft() const
 
 void ATank::SetAimIntention(FVector WorldSpaceAim)
 {
-	TankAimingComponent->SetAimIntention(WorldSpaceAim); // Delegate to tank
+	TankAimingComponent->SetAimIntention(WorldSpaceAim);
 }
 
 float ATank::GetHealthPercent() const
@@ -62,8 +49,9 @@ void ATank::BlowUpTank()
 	}
 	else // AI tank
 	{
-		DetachFromControllerPendingDestroy();
+		DetachFromControllerPendingDestroy(); // To stop AI driving tank
 	}
+
 	FindComponentByClass<UParticleSystemComponent>()->Activate();
 	OnTankDeath.Broadcast();
 }
