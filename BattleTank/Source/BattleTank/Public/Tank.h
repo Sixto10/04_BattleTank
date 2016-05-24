@@ -39,6 +39,8 @@ public:
 	
 	void Fire();
 	
+	UPROPERTY(BlueprintAssignable)
+	FTankDeathEvent OnTankDeath;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
@@ -46,9 +48,6 @@ protected:
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;
-
-	UPROPERTY(BlueprintAssignable)
-	FTankDeathEvent OnTankDeath;
 
 private:
 	ATank();

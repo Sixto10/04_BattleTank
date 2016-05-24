@@ -13,14 +13,21 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	// Called every frame
-	virtual void Tick(float DeltaSeconds) override;
+
 
 public:
 	UFUNCTION(BlueprintPure, Category = General)
 	ATank* GetControlledTank() const;
 
+	virtual void BeginPlay() override;
+
 private:
+	// Called every frame
+	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void OnTankDeath();
+	
 	// Returns an OUT parameter, and true if hit
 	bool CastSightRay(FVector &HitLocation) const;
 

@@ -44,8 +44,6 @@ void ATank::BlowUpTank()
 	bool bIsPlayer = GetController()->GetClass()->IsChildOf(APlayerController::StaticClass());
 	if (bIsPlayer)
 	{
-		auto Controller = GetController()->CastToPlayerController();
-		Controller->StartSpectatingOnly();
 	}
 	else // AI tank
 	{

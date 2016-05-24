@@ -19,10 +19,23 @@ void ATankPlayerController::Tick(float DeltaTime)
 	}
 }
 
+void ATankPlayerController::BeginPlay()
+{
+	Super::BeginPlay(); // Important here or we'll get strangies
+	GetControlledTank()->OnTankDeath.AddDynamic(this, &ATankPlayerController::OnTankDeath);
+}
+
+void ATankPlayerController::OnTankDeath()
+{
+	StartSpectatingOnly();
+}
+
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
 }
+
+
 
 bool ATankPlayerController::CastSightRay(FVector &HitLocation) const
 {
