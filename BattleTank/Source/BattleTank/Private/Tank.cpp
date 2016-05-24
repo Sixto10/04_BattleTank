@@ -36,11 +36,6 @@ float ATank::GetHealthPercent() const
 
 void ATank::BlowUpTank()
 {
-	// Blown-up tanks have no controller
-	if (!GetController()) {
-		return;
-	}
-
 	FindComponentByClass<UParticleSystemComponent>()->Activate();
 	OnTankDeath.Broadcast();
 }
@@ -67,5 +62,6 @@ bool ATank::IsBarrelMoving() const
 
 void ATank::Fire()
 {
-	return TankAimingComponent->Fire();
+	// TODO check and decrement ammo
+	TankAimingComponent->Fire();
 }
