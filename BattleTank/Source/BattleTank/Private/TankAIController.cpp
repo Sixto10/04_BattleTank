@@ -6,7 +6,7 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Cast<ATank>(GetPawn())->OnTankDeath.AddDynamic(this, &ATankAIController::OnTankDeath);
 }
 
 ATank* ATankAIController::GetPlayerTank() const
@@ -53,4 +53,9 @@ void ATankAIController::FireIfReady()
 		LastFireTime = FPlatformTime::Seconds();
 		ControlledTank->Fire();
 	}
+}
+
+void ATankAIController::OnTankDeath()
+{
+	GetPawn()->DetachFromControllerPendingDestroy(); // To stop AI driving tank
 }

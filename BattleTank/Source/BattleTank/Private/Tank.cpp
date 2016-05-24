@@ -41,15 +41,6 @@ void ATank::BlowUpTank()
 		return;
 	}
 
-	bool bIsPlayer = GetController()->GetClass()->IsChildOf(APlayerController::StaticClass());
-	if (bIsPlayer)
-	{
-	}
-	else // AI tank
-	{
-		DetachFromControllerPendingDestroy(); // To stop AI driving tank
-	}
-
 	FindComponentByClass<UParticleSystemComponent>()->Activate();
 	OnTankDeath.Broadcast();
 }

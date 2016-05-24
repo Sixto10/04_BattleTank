@@ -16,16 +16,19 @@ class BATTLETANK_API ATankAIController : public AAIController
 	GENERATED_BODY()
 	
 public:	
-
 	virtual void Tick(float DeltaSeconds) override;
 
 	void FireIfReady();
 
+	
 private:
 	virtual void BeginPlay() override;
 
 	void AimAtPlayer(ATank* Player);
 	ATank* GetPlayerTank() const;
+
+	UFUNCTION() // Just coz
+	void OnTankDeath();
 
 	UPROPERTY(EditAnywhere, Category = "AI Setup")
 	float AcceptanceRadius = 5.0;

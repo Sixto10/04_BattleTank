@@ -30,6 +30,7 @@ void ATankPlayerController::OnTankDeath()
 	StartSpectatingOnly();
 }
 
+// Used in BP hence in function of it's own
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
