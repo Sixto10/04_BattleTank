@@ -15,19 +15,18 @@ class BATTLETANK_API ATankAIController : public AAIController
 {
 	GENERATED_BODY()
 	
-public:	
-	virtual void Tick(float DeltaSeconds) override;
-
-	void FireIfReady();
-
-	
 private:
 	virtual void BeginPlay() override;
 
-	void AimAtPlayer(ATank* Player);
+	virtual void Tick(float DeltaSeconds) override;
+
 	ATank* GetPlayerTank() const;
 
-	UFUNCTION() // Just coz
+	void AimAtPlayer(ATank* Player); // Could be const for now, but may extend
+
+	void FireIfReady();
+
+	UFUNCTION()
 	void OnTankDeath();
 
 	UPROPERTY(EditAnywhere, Category = "AI Setup")

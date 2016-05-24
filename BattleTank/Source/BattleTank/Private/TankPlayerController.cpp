@@ -4,30 +4,59 @@
 #include "TankPlayerController.h"
 #include "Tank.h"
 
+void ATankPlayerController::BeginPlay()
+{
+	Super::BeginPlay(); // Important here or we'll get strangies
+
+						// Subscribing our local method to the tank's death event
+	GetControlledTank()->OnTankDeath.AddDynamic(this, &ATankPlayerController::OnTankDeath);
+}
 
 // Called every frame
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector HitLocation;
-	// TODO mention issue where aiming at sky slews barrel strangely
-	// EXERCISE: Change aiming reticule to UI element linked to code
-	if (GetPawn() && CastSightRay(HitLocation)) // Don't set aim if detached
+	if (!GetPawn())
+	{
+		return; // Don't linetrace if no longer possessed
+	}
+	AimTowardsCrosshair();
+}
+
+// TODO mention issue where aiming at sky slews barrel strangely
+void ATankPlayerController::AimTowardsCrosshair()
+{
+	FVector HitLocation; // Out parameter
+	if (GetSightRayHitLocation(HitLocation))
 	{
 		GetControlledTank()->SetAimIntention(HitLocation);
 		DrawDebugPoint(GetWorld(), HitLocation, 10, FColor(255, 0, 255), false, 0.0);
+		// TODO change to UI element
 	}
 }
 
-void ATankPlayerController::BeginPlay()
+bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 {
-	Super::BeginPlay(); // Important here or we'll get strangies
-	GetControlledTank()->OnTankDeath.AddDynamic(this, &ATankPlayerController::OnTankDeath);
-}
+	// TODO change to UI component
+	// Get or set crosshair position
+	int32 sizeX, sizeY;
+	GetViewportSize(sizeX, sizeY);
+	auto ScreenLocation = FVector2D(sizeX / 2, sizeY / 3);
 
-void ATankPlayerController::OnTankDeath()
-{
-	StartSpectatingOnly();
+	// TODO review this
+	FVector WorldPosition, LookDirection; // TODO what dows WorldPosition return?
+	if (UGameplayStatics::DeprojectScreenToWorld(this, ScreenLocation, WorldPosition, LookDirection))
+	{
+		FHitResult HitResult;
+		auto StartLocation = PlayerCameraManager->GetCameraLocation();
+		auto EndLocation = StartLocation + LookDirection * LineTraceRange;
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+		{
+			HitLocation = HitResult.Location;
+			return true;
+		}
+	}
+	return false;
 }
 
 // Used in BP hence in function of it's own
@@ -36,27 +65,10 @@ ATank* ATankPlayerController::GetControlledTank() const
 	return Cast<ATank>(GetPawn());
 }
 
-
-
-bool ATankPlayerController::CastSightRay(FVector &HitLocation) const
+void ATankPlayerController::OnTankDeath()
 {
-	int32 sizeX;
-	int32 sizeY;
-	GetViewportSize(sizeX, sizeY);
-	auto ScreenLocation = FVector2D(sizeX / 2, sizeY / 3);
-
-	FVector WorldPosition;
-	FVector WorldDirection;
-	if (UGameplayStatics::DeprojectScreenToWorld(this, ScreenLocation, WorldPosition, WorldDirection))
-	{
-		FHitResult HitResult;
-		auto StartLocation = PlayerCameraManager->GetCameraLocation();
-		auto EndLocation = StartLocation + WorldDirection * LineTraceRange;
-		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility)) {
-			HitLocation = HitResult.Location;
-			return true;
-		}
-	}
-	return false;
+	StartSpectatingOnly();
 }
+
+
 

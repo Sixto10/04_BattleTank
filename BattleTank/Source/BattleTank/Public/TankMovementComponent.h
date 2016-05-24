@@ -16,15 +16,6 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	UTankMovementComponent();
-
-	// Called when the game starts
-	virtual void BeginPlay() override;
-	
-	// Called every frame
-	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
-
 	// Part of the AI movement stack, overriding to force AI to use our movement API
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed);
 
@@ -53,6 +44,12 @@ public:
 	FOnRightThrottleRequest OnRightThrottleRequest;
 
 private:
+	// Sets default values for this component's properties
+	UTankMovementComponent();
+
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	// State kept here as this is where we aggregrate calls from various sources
 	float LeftTrackThrottle = 0;
 	float RightTrackThrottle = 0;

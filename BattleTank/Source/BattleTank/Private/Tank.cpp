@@ -65,6 +65,6 @@ void ATank::Fire()
 	if (CurrentAmmo > 0)
 	{
 		TankAimingComponent->Fire();
-		CurrentAmmo-- ; // Using pre-decrement because Bjarne Strousstrup uses it a lot
+		CurrentAmmo--;
 	}
 }

@@ -19,7 +19,7 @@ class BATTLETANK_API UTankBarrel : public UStaticMeshComponent
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = Input)
-	void Elevate(float Speed);
+	void Elevate(float DegreesPerSecond);
 
 private:
 	UPROPERTY(EditAnywhere)

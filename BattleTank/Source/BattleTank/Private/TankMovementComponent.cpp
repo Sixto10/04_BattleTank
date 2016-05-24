@@ -11,28 +11,16 @@ UTankMovementComponent::UTankMovementComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true;
+	bWantsBeginPlay = true; // But will get called in super class automatically
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
-
-
-// Called when the game starts
-void UTankMovementComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-}
-
 
 // Called every frame
 void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// Pass through manual throttle requests
+	// TODO measure performance of this
 	OnLeftThrottleRequest.Broadcast(LeftTrackThrottle);
 	LeftTrackThrottle = 0; // "Consume" value to start fresh next frame
 
@@ -45,7 +33,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	auto TankForward = GetOwner()->GetActorForwardVector();
 	
 	auto AIForwardIntention = MoveVelocity.GetSafeNormal(); // Makes into a unit vector without mutating
-	IntendMoveForward(Dot3(AIForwardIntention, TankForward)); // 
+	IntendMoveForward(Dot3(AIForwardIntention, TankForward));
 
 	auto AITurnIntention = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
 	IntendTurnRight(AITurnIntention);
