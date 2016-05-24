@@ -6,7 +6,6 @@
 #include "Projectile.h"
 #include "TankAimingComponent.generated.h"
 
-// TODO consider changing to BlueprintImplementableEvent
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurretRotateRequest, float, Speed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBarrelElevateRequest, float, Speed);
 
@@ -42,7 +41,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Dynamics)
 	void Fire();
 
-	const bool IsBarrelMoving();
+	bool IsBarrelMoving() const;
 
 private:
 	void UpdateAim();

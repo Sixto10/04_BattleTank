@@ -16,9 +16,13 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+public:
+	UFUNCTION(BlueprintPure, Category = General)
+	ATank* GetControlledTank() const;
+
 private:
 	// Returns an OUT parameter, and true if hit
-	const bool CastSightRay(FVector &HitLocation); //		TODO review
+	bool CastSightRay(FVector &HitLocation) const;
 
 	// Determines when the aiming line trace stops looking for a hit
 	UPROPERTY(EditAnywhere)

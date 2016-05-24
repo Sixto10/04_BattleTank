@@ -6,8 +6,6 @@
 
 #define OUT
 
-// TODO Code review at 720p
-
 // Sets default values for this component's properties
 UTankMovementComponent::UTankMovementComponent()
 {

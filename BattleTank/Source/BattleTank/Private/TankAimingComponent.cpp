@@ -30,7 +30,7 @@ void UTankAimingComponent::Fire()
 	}
 }
 
-const bool UTankAimingComponent::IsBarrelMoving()
+bool UTankAimingComponent::IsBarrelMoving() const
 {
 	auto BarrelForward = Barrel->GetForwardVector();
 	return !AimRequest.Equals(BarrelForward, 0.01);

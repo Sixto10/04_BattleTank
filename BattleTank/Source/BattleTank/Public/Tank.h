@@ -32,18 +32,18 @@ public:
 	void AddAmmo(int Rounds);
 
 	UFUNCTION(BlueprintPure, Category=Weapons)
-	const int GetRoundsLeft();
+	int GetRoundsLeft() const;
 
 	// For forwarding to relevant component
 	UFUNCTION(BlueprintCallable, Category = Control)
 	void SetAimIntention(FVector WorldSpaceAim);
 	
 	UFUNCTION(BlueprintPure, Category = GamePlay)
-	const float GetHealthPercent(); // Discuss
+	float GetHealthPercent() const; // Discuss
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	
-	const bool IsBarrelMoving();
+	bool IsBarrelMoving() const;
 
 	void Fire();
 

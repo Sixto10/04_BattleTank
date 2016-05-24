@@ -32,7 +32,7 @@ void ATank::AddAmmo(int Rounds)
 	CurrentAmmo = FMath::Clamp(CurrentAmmo + Rounds, 0, MaxAmmo);
 }
 
-const int ATank::GetRoundsLeft()
+int ATank::GetRoundsLeft() const
 {
 	return CurrentAmmo;
 }
@@ -42,7 +42,7 @@ void ATank::SetAimIntention(FVector WorldSpaceAim)
 	TankAimingComponent->SetAimIntention(WorldSpaceAim); // Delegate to tank
 }
 
-const float ATank::GetHealthPercent()
+float ATank::GetHealthPercent() const
 {
 	return (float)CurrentHealth / (float)StartingHealth;
 }
@@ -82,7 +82,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	return DamageToApply;
 }
 
-const bool ATank::IsBarrelMoving()
+bool ATank::IsBarrelMoving() const
 {
 	// Delegate to aiming component
 	return TankAimingComponent->IsBarrelMoving();
