@@ -7,14 +7,15 @@
 // Sets default values
 AProjectile::AProjectile()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false; // Note tick suppression
 
+	// Collision probe
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
 	SetRootComponent(CollisionMesh); // Projectile Movement expecting this
 	CollisionMesh->SetNotifyRigidBodyCollision(true);
 	CollisionMesh->SetVisibility(false);
 
+	// Particle effects
 	LaunchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
 	LaunchBlast->AttachTo(RootComponent);
 
@@ -22,9 +23,11 @@ AProjectile::AProjectile()
 	ImpactBlast->AttachTo(RootComponent);
 	ImpactBlast->bAutoActivate = false;	
 	
+	// To make hit tanks move
 	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
 	ExplosionForce->AttachTo(RootComponent);
 
+	// For balistic calculations
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovement"));
 	ProjectileMovement->bAutoActivate = false;
 }
@@ -33,13 +36,9 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-}
 
-// Called every frame
-void AProjectile::Tick( float DeltaTime )
-{
-	Super::Tick( DeltaTime );
+	// Listen for the collision mesh's OnHit event, delegate to OnHit
+	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 void AProjectile::LaunchProjectile(float Speed)
@@ -49,6 +48,7 @@ void AProjectile::LaunchProjectile(float Speed)
 	BroadcastBPLaunchEvent();
 }
 
+// The signature of this method came from inspecting the type of OnComponentHit
 void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
 	ExplodeProjectile();
@@ -56,15 +56,17 @@ void AProjectile::OnHit(AActor * SelfActor, UPrimitiveComponent * OtherComponent
 
 void AProjectile::ExplodeProjectile()
 {
-	LaunchBlast->Deactivate(); //Stop the smoke trail;
-	ImpactBlast->Activate(); //Make explode;
-	ExplosionForce->FireImpulse(); //Force impact;
+	LaunchBlast->Deactivate(); // Stop the smoke trail
+	ImpactBlast->Activate();
+	ExplosionForce->FireImpulse();
 
-	//Need to explicitly set so that ApplyRadialDamage always works. Otherwise seems to race with destruction of root comp.
+	// Need to explicitly set so that ApplyRadialDamage always works.
+	// Otherwise seems to race with destruction of root comp.
 	SetRootComponent(ImpactBlast);
-	CollisionMesh->DestroyComponent();
+	CollisionMesh->DestroyComponent(); // Remove obstruction once exploded
 
-	UGameplayStatics::ApplyRadialDamage(this,
+	UGameplayStatics::ApplyRadialDamage(
+		this,
 		ProjectileDamage,
 		GetActorLocation(),
 		ExplosionForce->Radius,
@@ -72,12 +74,22 @@ void AProjectile::ExplodeProjectile()
 		TArray<AActor *>() // Ignore no actors
 	);
 
-	FTimerHandle Timer;
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnDestroyTimerExpired, DestroyDelay, false);
-
+	SetDestroyTimer();
 	BroadcastBPExplodeEvent();
 }
 
+// Gives particles effects time to finish
+void AProjectile::SetDestroyTimer()
+{
+	FTimerHandle Timer;
+	GetWorld()->GetTimerManager().SetTimer(
+		Timer,
+		this,
+		&AProjectile::OnDestroyTimerExpired,
+		DestroyDelay,
+		false
+	);
+}
 
 void AProjectile::OnDestroyTimerExpired()
 {

@@ -11,18 +11,10 @@ class BATTLETANK_API AProjectile : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	AProjectile();
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
-	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
-
+	// Fire projectile in the direction it's currently facing
 	void LaunchProjectile(float Speed);
-	void ExplodeProjectile();
-
+	
+protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = Events, meta = (DisplayName = "On Launch"))
 	void BroadcastBPLaunchEvent();
 
@@ -31,20 +23,35 @@ public:
 	void BroadcastBPExplodeEvent();
 
 private:
-	UFUNCTION()
+	// Sets default values for this actor's properties
+	AProjectile();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Handles explosion logic, could be in BP
+	void ExplodeProjectile();
+
+	void SetDestroyTimer();
+
+	UFUNCTION() // Required so that OnHit can be bound at runtime presumably
 	void OnHit(AActor* SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 	void OnDestroyTimerExpired();
 	
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent *CollisionMesh = nullptr;
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent *LaunchBlast = nullptr;
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent *ImpactBlast = nullptr;
-	UPROPERTY(VisibleAnywhere)
-	URadialForceComponent *ExplosionForce = nullptr;
+	UPROPERTY(VisibleAnywhere) // Pointer is visible, properties can be edited
+	UStaticMeshComponent* CollisionMesh = nullptr;
 
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent* LaunchBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent* ImpactBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	URadialForceComponent* ExplosionForce = nullptr;
+
+	// Not visible because we don't want to be able to edit properties in BP
 	UProjectileMovementComponent *ProjectileMovement = nullptr;
 
 	// To allow impact animation to fully play-out
