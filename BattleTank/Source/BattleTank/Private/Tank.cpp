@@ -59,14 +59,13 @@ void ATank::BlowUpTank()
 	{
 		auto Controller = GetController()->CastToPlayerController();
 		Controller->StartSpectatingOnly();
-		auto PlayerState = Cast<ATankPlayerState>(Controller->PlayerState);
-		PlayerState->IsDead = true; // 
 	}
 	else // AI tank
 	{
 		DetachFromControllerPendingDestroy();
 	}
 	FindComponentByClass<UParticleSystemComponent>()->Activate();
+	OnTankDeath.Broadcast();
 }
 
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)

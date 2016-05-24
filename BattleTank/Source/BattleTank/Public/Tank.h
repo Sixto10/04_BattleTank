@@ -10,8 +10,10 @@
 
 #include "Tank.generated.h" // Must be the last include
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDeathEvent);
+
 // Represents the physical tank, and allows tank-level interaction such as reloading
-UCLASS()
+UCLASS(ClassGroup = (Custom), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
 class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
@@ -44,6 +46,10 @@ public:
 	const bool IsBarrelMoving();
 
 	void Fire();
+
+	/** Broadcasts whenever the layer changes */
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FTankDeathEvent OnTankDeath;
 
 protected:
 	// Store required movement component
