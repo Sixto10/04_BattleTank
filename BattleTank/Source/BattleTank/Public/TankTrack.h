@@ -23,32 +23,29 @@ public:
 	// Sets default values for this component's properties
 	UTankTrack();
 
-	// Called when the game starts
-	virtual void BeginPlay() override;
-	
-	// Called every frame
-	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
-
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
 private:
-	
 	UFUNCTION()
 	void OnHit(AActor* SelfActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	UPrimitiveComponent* GetTankRoot() const;
+
+	void ApplySidewaysFriction(float DeltaTime);
 
 	UPROPERTY(EditAnywhere)
 	float TrackMaxDrivingForce = 50000000;
 
-	// Current throttle level, regardles of in air or on ground
-	UPROPERTY(VisibleAnywhere)
-	float CurrentThrottle = 0;
-
 	// Is this track on the ground?
 	UPROPERTY(VisibleAnywhere)
-	bool IsGrounded = false;
+	bool HasTraction = false;
 
 	bool HitThisFrame = false;
-
-	void ApplySidewaysFriction(float DeltaTime);
 };

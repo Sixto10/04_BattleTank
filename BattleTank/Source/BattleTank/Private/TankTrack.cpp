@@ -15,45 +15,40 @@ UTankTrack::UTankTrack()
 	// ...
 }
 
-
 // Called when the game starts
 void UTankTrack::BeginPlay()
 {
 	Super::BeginPlay();
 
 	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
-	
-
 }
-
 
 // Called every frame
 void UTankTrack::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	HasTraction = HitThisFrame;
 	if (HitThisFrame)
 	{
-		HitThisFrame = false;
-		IsGrounded = true;
+		HitThisFrame = false; //Assume not hit for next frame.
 		ApplySidewaysFriction(DeltaTime);
-	}
-	else
-	{
-		IsGrounded = false;
 	}
 }
 
+UPrimitiveComponent* UTankTrack::GetTankRoot() const
+{
+	return Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+}
 
 void UTankTrack::SetThrottle(float ThrottleRequest)
 {
-	if (IsGrounded)
+	if (HasTraction)
 	{
-		CurrentThrottle = ThrottleRequest;
-		auto Forward = GetOwner()->GetActorForwardVector();
-		FVector ForceApplied = Forward * CurrentThrottle * TrackMaxDrivingForce;
+		auto Forward = GetForwardVector();
+		FVector ForceApplied = Forward * ThrottleRequest * TrackMaxDrivingForce;
 		auto OurLocation = GetComponentLocation();
-		GetOwner()->GetRootPrimitiveComponent()->AddForceAtLocation(ForceApplied, OurLocation);
+		GetTankRoot()->AddForceAtLocation(ForceApplied, OurLocation);
 	}
 
 }
@@ -63,13 +58,13 @@ void UTankTrack::OnHit(AActor * SelfActor, UPrimitiveComponent* OtherComponent, 
 	HitThisFrame = true;
 }
 
-
 // Applies friction force for this frame
 void UTankTrack::ApplySidewaysFriction(float DeltaTime)
 {
-	auto TankRightVector = GetOwner()->GetActorRightVector();
-	auto SlippageSpeed = Dot3(GetOwner()->GetVelocity(), TankRightVector);
-	auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * TankRightVector;
-	auto CorrectionForce = (GetOwner()->GetRootPrimitiveComponent()->GetMass() * CorrectionAcceleration) / 2;
-	GetOwner()->GetRootPrimitiveComponent()->AddForce(CorrectionForce);
+	auto TankRightVector = GetRightVector();
+	auto SlippageSpeed = Dot3(GetComponentVelocity(), TankRightVector);
+	auto CorrectionAcceleration = -(SlippageSpeed / DeltaTime) * TankRightVector;
+	// Now apply half the total required accelleration as we have two tracks, dodgy
+	auto CorrectionForce = (GetTankRoot()->GetMass() * CorrectionAcceleration) / 2;
+	GetTankRoot()->AddForce(CorrectionForce);
 }
