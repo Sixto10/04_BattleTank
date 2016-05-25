@@ -31,7 +31,7 @@ void UTankAimingComponent::Fire()
 
 bool UTankAimingComponent::IsBarrelMoving() const
 {
-	if (!Barrel) { return false; }
+	if (!Barrel) { return false; } // Barrel may not be attached to tank yet
 	auto BarrelForward = Barrel->GetForwardVector();
 	return !DesiredAimDirection.Equals(BarrelForward, 0.01);
 }

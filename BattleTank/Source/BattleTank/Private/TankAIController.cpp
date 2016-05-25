@@ -4,16 +4,16 @@
 #include "TankAIController.h"
 
 
-// Because BeginPlay may be too early
+// Wait until the controlled pawn is set
 void ATankAIController::SetPawn(APawn * InPawn)
 {
 	Super::SetPawn(InPawn);
-	// Register as listener of OnTankDeath event so we can detach when dead
+	
 	if (!InPawn) { return; }
-	if (!Cast<ATank>(InPawn)->OnTankDeath.IsAlreadyBound(this, &ATankAIController::OnTankDeath))
-	{
-		Cast<ATank>(InPawn)->OnTankDeath.AddDynamic(this, &ATankAIController::OnTankDeath);
-	}
+	auto PossessedTank = Cast<ATank>(InPawn);
+
+	// Subscribe our local method to the tank's death event
+	PossessedTank->OnTankDeath.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
 }
 
 ATank* ATankAIController::GetPlayerTank() const

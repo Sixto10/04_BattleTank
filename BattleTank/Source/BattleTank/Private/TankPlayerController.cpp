@@ -10,11 +10,9 @@ void ATankPlayerController::SetPawn(APawn * InPawn)
 	Super::SetPawn(InPawn);
 	
 	if (!GetControlledTank()) { return; }
-	// Subscribing our local method to the tank's death event
-	if (!GetControlledTank()->OnTankDeath.IsAlreadyBound(this, &ATankPlayerController::OnTankDeath))
-	{
-		GetControlledTank()->OnTankDeath.AddDynamic(this, &ATankPlayerController::OnTankDeath);
-	}
+
+	// Subscribe our local method to the tank's death event
+	GetControlledTank()->OnTankDeath.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
 }
 
 // Called every frame
