@@ -62,7 +62,7 @@ void UTankTrack::OnHit(AActor * SelfActor, UPrimitiveComponent* OtherComponent, 
 void UTankTrack::ApplySidewaysFriction(float DeltaTime)
 {
 	auto TankRightVector = GetRightVector();
-	auto SlippageSpeed = Dot3(GetComponentVelocity(), TankRightVector);
+	auto SlippageSpeed = FVector::DotProduct(GetComponentVelocity(), TankRightVector);
 	auto CorrectionAcceleration = -(SlippageSpeed / DeltaTime) * TankRightVector;
 	// Now apply half the total required accelleration as we have two tracks, dodgy
 	auto CorrectionForce = (GetTankRoot()->GetMass() * CorrectionAcceleration) / 2;
