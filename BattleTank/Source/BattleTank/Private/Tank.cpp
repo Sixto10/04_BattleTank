@@ -26,7 +26,7 @@ int ATank::GetRoundsLeft() const
 
 void ATank::SetAimIntention(FVector WorldSpaceAim)
 {
-	TankAimingComponent->SetAimIntention(WorldSpaceAim);
+	TankAimingComponent->AimAt(WorldSpaceAim);
 }
 
 float ATank::GetHealthPercent() const

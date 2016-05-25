@@ -11,8 +11,6 @@ UTankAimingComponent::UTankAimingComponent()
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 void UTankAimingComponent::SetBarrelReference(USceneComponent* BarrelInBP)
@@ -33,13 +31,7 @@ void UTankAimingComponent::Fire()
 bool UTankAimingComponent::IsBarrelMoving() const
 {
 	auto BarrelForward = Barrel->GetForwardVector();
-	return !AimRequest.Equals(BarrelForward, 0.01);
-}
-
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
+	return !DesiredAimDirection.Equals(BarrelForward, 0.01);
 }
 
 // Called every frame
@@ -57,55 +49,58 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 	ElevateSpeed = 0;
 }
 
-// Starts the FBW system slewing towards aim point
-void UTankAimingComponent::SetAimIntention(FVector WorldSpaceAim)
+void UTankAimingComponent::AimAt(FVector WorldSpaceTarget)
 {
-	if (!Barrel)
+	FVector LaunchVelocity;
+	if (GetRequiredLaunchVelocity(WorldSpaceTarget, LaunchVelocity))
 	{
-		return;
+		DesiredAimDirection = LaunchVelocity.GetSafeNormal();
 	}
-	FVector TossVelocity;
-	FVector StartLocation = Barrel->GetComponentLocation();
-	if (UGameplayStatics::SuggestProjectileVelocity(GetOwner(), 
-		TossVelocity, 
-		StartLocation, 
-		WorldSpaceAim, 
-		LaunchSpeed, 
-		false, 
-		0, 0, 
-		ESuggestProjVelocityTraceOption::DoNotTrace))
-	{
-		AimRequest = TossVelocity.GetSafeNormal();
-	}
+	// Can't find an aim solution so do nothing
 }
 
-void UTankAimingComponent::UpdateAim()
+bool UTankAimingComponent::GetRequiredLaunchVelocity(FVector WorldSpaceTarget, FVector& LaunchVelocity)
 {
-	if (!Barrel) {
-		return;
-	}
-	/* Code that causes rotation in the WRONG direction sometimes...
+	if (!Barrel) { return false; }
+	FVector StartLocation = Barrel->GetComponentLocation();
+	bool bIsCalculationSuccessful = UGameplayStatics::SuggestProjectileVelocity(
+		this, // GameplayStatic needs context 
+		LaunchVelocity, // OUT parameter
+		StartLocation,
+		WorldSpaceTarget,
+		LaunchSpeed,
+		false,
+		0,
+		0,
+		ESuggestProjVelocityTraceOption::DoNotTrace
+	);
+	return bIsCalculationSuccessful;
+}
+
+/* Code that causes rotation in the WRONG direction sometimes...
 	auto BarrelRotation = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimRequest.Rotation();
 	auto DeltaRotation = AimAsRotator - BarrelRotation;
-	*/
-
-	auto CurrentAim = AimRequest.ToOrientationQuat();
-	auto BarrelRotation = Barrel->GetForwardVector().ToOrientationQuat();
-
-	/*
+*/
+/*
 	Derivation of matrix multipication...
 	B = BarrelRotation,  A = AimRequest,  D = Delta
-	
+
 	BarrelRotation rotated by some Delta gives the AimRequest direction...
 	B		D =			A
 	B^-1 B	D = B^-1	A
-			D = B^-1	A
-	
-	B^-1 B is the identity matrix as rotations are always invertible
-	*/
-	auto Delta = BarrelRotation.Inverse() * CurrentAim;
+	D = B^-1	A
 
+	B^-1 B is the identity matrix as rotations are always invertible
+*/
+void UTankAimingComponent::UpdateAim()
+{
+	auto CurrentAim = DesiredAimDirection.ToOrientationQuat();
+	
+	if (!Barrel) { return; }
+	auto BarrelRotation = Barrel->GetForwardVector().ToOrientationQuat();
+
+	auto Delta = BarrelRotation.Inverse() * CurrentAim;
 	auto DeltaRotation = Delta.Rotator();
 
 	RotateTurret(DeltaRotation.Yaw);

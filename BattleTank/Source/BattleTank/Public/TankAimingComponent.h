@@ -15,15 +15,6 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UTankAimingComponent();
-
-	// Called when the game starts
-	virtual void BeginPlay() override;
-	
-	// Called every frame
-	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
-
 	// Delegates turret rotation to turret motors
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnTurretRotateRequest OnTurretRotateRequest;
@@ -32,7 +23,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnBarrelElevateRequest OnBarrelElevateRequest;
 	
-	void SetAimIntention(FVector WorldSpaceAim);
+	// Tries to move barrel to position that would hit target
+	void AimAt(FVector WorldSpaceAim);
 
 	// Takes barrel reference
 	UFUNCTION(BlueprintCallable, Category = Setup)
@@ -44,12 +36,19 @@ public:
 	bool IsBarrelMoving() const;
 
 private:
+	UTankAimingComponent();
+
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	void UpdateAim();
 		
-	FVector AimRequest = FVector::ZeroVector;
+	FVector DesiredAimDirection = FVector::ZeroVector;
 
 	void RotateTurret(float Speed);
 	void ElevateBarrel(float Speed);
+
+	bool GetRequiredLaunchVelocity(FVector WorldSpaceTarget, FVector& LaunchVelocity);
 
 	// State kept here as this is where we aggregrate calls from various sources
 	float RotateSpeed = 0;
@@ -63,4 +62,5 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	USceneComponent* Barrel = nullptr;
+
 };
