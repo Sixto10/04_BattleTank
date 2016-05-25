@@ -2,7 +2,6 @@
 
 #include "BattleTank.h"
 #include "Tank.h"
-#include "TankPlayerState.h"
 
 // Sets default values
 ATank::ATank()
