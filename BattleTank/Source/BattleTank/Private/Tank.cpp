@@ -24,7 +24,7 @@ int ATank::GetRoundsLeft() const
 	return CurrentAmmo;
 }
 
-void ATank::SetAimIntention(FVector WorldSpaceAim)
+void ATank::AimAt(FVector WorldSpaceAim)
 {
 	TankAimingComponent->AimAt(WorldSpaceAim);
 }

@@ -44,7 +44,7 @@ void ATankAIController::AimAtPlayer(ATank* Player)
 	auto PossessedTank = Cast<ATank>(GetPawn());
 	if (!PossessedTank) { return; }
 
-	PossessedTank->SetAimIntention(PlayerLocation);
+	PossessedTank->AimAt(PlayerLocation);
 }
 
 void ATankAIController::FireIfReady()

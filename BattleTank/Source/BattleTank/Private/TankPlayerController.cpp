@@ -30,7 +30,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation; // Out parameter
 	if (GetSightRayHitLocation(HitLocation))
 	{
-		GetControlledTank()->SetAimIntention(HitLocation);
+		GetControlledTank()->AimAt(HitLocation);
 		DrawDebugPoint(GetWorld(), HitLocation, 10, FColor(255, 0, 255), false, 0.0);
 		// TODO change to UI element
 	}
