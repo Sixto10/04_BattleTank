@@ -4,28 +4,31 @@
 #include "TankPlayerController.h"
 #include "Tank.h"
 
-void ATankPlayerController::BeginPlay()
-{
-	Super::BeginPlay(); // Important here or we'll get strangies
 
-						// Subscribing our local method to the tank's death event
-	GetControlledTank()->OnTankDeath.AddDynamic(this, &ATankPlayerController::OnTankDeath);
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	
+	if (!GetControlledTank()) { return; }
+	// Subscribing our local method to the tank's death event
+	if (!GetControlledTank()->OnTankDeath.IsAlreadyBound(this, &ATankPlayerController::OnTankDeath))
+	{
+		GetControlledTank()->OnTankDeath.AddDynamic(this, &ATankPlayerController::OnTankDeath);
+	}
 }
 
 // Called every frame
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!GetPawn())
-	{
-		return; // Don't linetrace if no longer possessed
-	}
 	AimTowardsCrosshair();
 }
 
 // TODO mention issue where aiming at sky slews barrel strangely
 void ATankPlayerController::AimTowardsCrosshair()
 {
+	if (!GetControlledTank()) { return; }
+	
 	FVector HitLocation; // Out parameter
 	if (GetSightRayHitLocation(HitLocation))
 	{

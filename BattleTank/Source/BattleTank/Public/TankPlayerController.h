@@ -19,8 +19,6 @@ protected:
 	ATank* GetControlledTank() const;
 
 private:
-	virtual void BeginPlay() override;
-
 	virtual void Tick(float DeltaSeconds) override;
 
 	void AimTowardsCrosshair();
@@ -30,6 +28,8 @@ private:
 	
 	// Returns an OUT parameter, and true if hit
 	bool GetSightRayHitLocation(FVector &HitLocation) const;
+
+	virtual void SetPawn(APawn* InPawn) override;
 
 	// Determines when the aiming line trace stops looking for a hit
 	UPROPERTY(EditAnywhere)

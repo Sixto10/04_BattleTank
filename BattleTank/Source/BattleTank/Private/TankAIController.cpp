@@ -3,22 +3,24 @@
 #include "BattleTank.h"
 #include "TankAIController.h"
 
-void ATankAIController::BeginPlay()
-{
-	Super::BeginPlay();
 
+// Because BeginPlay may be too early
+void ATankAIController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
 	// Register as listener of OnTankDeath event so we can detach when dead
-	Cast<ATank>(GetPawn())->OnTankDeath.AddDynamic(this, &ATankAIController::OnTankDeath);
+	if (!InPawn) { return; }
+	if (!Cast<ATank>(InPawn)->OnTankDeath.IsAlreadyBound(this, &ATankAIController::OnTankDeath))
+	{
+		Cast<ATank>(InPawn)->OnTankDeath.AddDynamic(this, &ATankAIController::OnTankDeath);
+	}
 }
 
 ATank* ATankAIController::GetPlayerTank() const
 {
 	// GetWorld() to obey const contract
 	auto PlayerPawn = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn();
-	if (!PlayerPawn)
-	{
-		return nullptr;
-	}
+	if (!PlayerPawn) { return nullptr; }
 	return Cast<ATank>(PlayerPawn);
 }
 
@@ -38,19 +40,21 @@ void ATankAIController::Tick(float DeltaTime)
 void ATankAIController::AimAtPlayer(ATank* Player)
 {
 	auto PlayerLocation = Player->GetActorLocation();
+
 	auto PossessedTank = Cast<ATank>(GetPawn());
-	if (PossessedTank)
-	{
-		PossessedTank->SetAimIntention(PlayerLocation);
-	}
+	if (!PossessedTank) { return; }
+
+	PossessedTank->SetAimIntention(PlayerLocation);
 }
 
 void ATankAIController::FireIfReady()
 {
 	auto PossessedTank = Cast<ATank>(GetPawn());
-	auto TimeSinceLastFire = FPlatformTime::Seconds() - LastFireTime;
+	if (!PossessedTank) { return; }
+
 	bool bHasFinishedAiming = !PossessedTank->IsBarrelMoving();
 
+	auto TimeSinceLastFire = FPlatformTime::Seconds() - LastFireTime;
 	if (TimeSinceLastFire > FiringRate && bHasFinishedAiming)
 	{
 		LastFireTime = FPlatformTime::Seconds();
@@ -60,5 +64,6 @@ void ATankAIController::FireIfReady()
 
 void ATankAIController::OnTankDeath()
 {
+	if (!GetPawn()) { return; }
 	GetPawn()->DetachFromControllerPendingDestroy(); // To stop AI driving tank
 }

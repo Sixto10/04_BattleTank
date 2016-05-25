@@ -23,6 +23,7 @@ void UTankAimingComponent::Fire()
 	if (ProjectileBlueprint)
 	{
 		auto Socket = FName("Projectile");
+		if (!Barrel) { return; }
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
 		Projectile->LaunchProjectile(LaunchSpeed);
 	}
@@ -30,6 +31,7 @@ void UTankAimingComponent::Fire()
 
 bool UTankAimingComponent::IsBarrelMoving() const
 {
+	if (!Barrel) { return false; }
 	auto BarrelForward = Barrel->GetForwardVector();
 	return !DesiredAimDirection.Equals(BarrelForward, 0.01);
 }
