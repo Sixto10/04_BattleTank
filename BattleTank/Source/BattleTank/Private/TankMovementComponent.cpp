@@ -20,7 +20,6 @@ void UTankMovementComponent::TickComponent( float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// TODO measure performance of this
 	OnLeftThrottleRequest.Broadcast(LeftTrackThrottle);
 	LeftTrackThrottle = 0; // "Consume" value to start fresh next frame
 
