@@ -29,6 +29,9 @@ private:
 	// Returns an OUT parameter, and true if hit
 	bool GetSightRayHitLocation(FVector &HitLocation) const;
 
+	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
+	bool GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const;
+
 	virtual void SetPawn(APawn* InPawn) override;
 
 	// Determines when the aiming line trace stops looking for a hit

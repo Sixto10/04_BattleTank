@@ -36,24 +36,45 @@ void ATankPlayerController::AimTowardsCrosshair()
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 {
-	// TODO change to UI component
 	// Get or set crosshair position
 	int32 sizeX, sizeY;
 	GetViewportSize(sizeX, sizeY);
-	auto ScreenLocation = FVector2D(sizeX / 2, sizeY / 3);
+	auto ScreenLocation = FVector2D(sizeX / 2, sizeY / 3); // Hard coded
 
-	// TODO review this
-	FVector WorldPosition, LookDirection; // TODO what dows WorldPosition return?
-	if (UGameplayStatics::DeprojectScreenToWorld(this, ScreenLocation, WorldPosition, LookDirection))
+	FVector LookDirection;
+	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		FHitResult HitResult;
-		auto StartLocation = PlayerCameraManager->GetCameraLocation();
-		auto EndLocation = StartLocation + LookDirection * LineTraceRange;
-		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
-		{
-			HitLocation = HitResult.Location;
-			return true;
-		}
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
+	}
+	return false;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
+{
+	// WorldPosition seems to be garbage so we can't use this.
+	FVector WorldPosition;
+	return UGameplayStatics::DeprojectScreenToWorld(
+		this,
+		ScreenLocation,
+		WorldPosition,
+		LookDirection
+	);
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+	FHitResult HitResult;
+	auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	auto EndLocation = StartLocation + LookDirection * LineTraceRange;
+	if (GetWorld()->LineTraceSingleByChannel(
+			HitResult, 
+			StartLocation, 
+			EndLocation, 
+			ECollisionChannel::ECC_Visibility)
+		)
+	{
+		HitLocation = HitResult.Location;
+		return true;
 	}
 	return false;
 }
@@ -68,6 +89,3 @@ void ATankPlayerController::OnTankDeath()
 {
 	StartSpectatingOnly();
 }
-
-
-
