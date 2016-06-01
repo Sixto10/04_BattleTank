@@ -23,7 +23,7 @@ public:
 	void AddAmmo(int Rounds);
 
 	UFUNCTION(BlueprintPure, Category=Weapons)
-	int GetRoundsLeft() const;
+	int32 GetRoundsLeft() const;
 
 	UFUNCTION(BlueprintPure, Category = GamePlay)
 	float GetHealthPercent() const;
@@ -54,16 +54,16 @@ private:
 	ATank();
 	
 	UPROPERTY(EditAnywhere, Category=Setup)
-	int MaxAmmo = 10;
+	int32 MaxAmmo = 10;
 
 	UPROPERTY(VisibleAnywhere, Category= Setup)
-	int CurrentAmmo = 0;
+	int32 CurrentAmmo = 0;
 
 	UPROPERTY(EditAnywhere, Category = Setup)
-	int StartingHealth = 100;
+	int32 StartingHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = Setup)
-	int CurrentHealth = StartingHealth;
+	int32 CurrentHealth = StartingHealth;
 
 	void BlowUpTank();
 };
