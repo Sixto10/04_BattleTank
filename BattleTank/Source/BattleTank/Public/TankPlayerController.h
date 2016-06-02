@@ -37,4 +37,12 @@ private:
 	// Determines when the aiming line trace stops looking for a hit
 	UPROPERTY(EditAnywhere)
 	float LineTraceRange = 1000000;
+    
+    // Proportion of way across screen crosshair is horizontally
+    UPROPERTY(EditAnywhere)
+    float CrossHairXLocation = 0.5;
+    
+    // Proportion of way down screen crosshair is vertically
+    UPROPERTY(EditAnywhere)
+    float CrossHairYLocation = 0.3333333;
 };
