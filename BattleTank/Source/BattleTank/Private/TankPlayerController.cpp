@@ -41,15 +41,15 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	GetViewportSize(sizeX, sizeY);
 	auto ScreenLocation = FVector2D(sizeX * CrossHairXLocation, sizeY * CrossHairYLocation);
 
-	FVector WorldDirection;
-	if (GetLookDirection(ScreenLocation, WorldDirection))
+	FVector LookDirection;
+	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		return GetLookVectorHitLocation(WorldDirection, HitLocation);
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
 	}
 	return false;
 }
 
-bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& WorldDirection) const
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
 {
 	// WorldPosition seems to be garbage so we can't use this.
 	FVector WorldLocation;
@@ -57,7 +57,7 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 		ScreenLocation.X,
         ScreenLocation.Y,
 		WorldLocation,
-		WorldDirection
+		LookDirection
 	);
 }
 
