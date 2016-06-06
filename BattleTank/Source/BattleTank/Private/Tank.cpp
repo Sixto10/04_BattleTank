@@ -23,6 +23,11 @@ int ATank::GetRoundsLeft() const
 	return CurrentAmmo;
 }
 
+void ATank::SetBarrelReference(UTankBarrel* Barrel)
+{
+	TankAimingComponent->SetBarrelReference(Barrel);
+}
+
 void ATank::AimAt(FVector WorldSpaceAim)
 {
 	TankAimingComponent->AimAt(WorldSpaceAim);

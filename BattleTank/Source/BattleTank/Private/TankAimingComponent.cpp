@@ -13,9 +13,9 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelInBP)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* Barrel)
 {
-	Barrel = BarrelInBP; // Sam thought of this, I said we should do this->Barrel = Barrel but he wouldn't listen.
+	this->Barrel = Barrel;
 }
 
 void UTankAimingComponent::Fire()

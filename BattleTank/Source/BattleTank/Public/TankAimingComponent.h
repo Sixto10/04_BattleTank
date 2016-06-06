@@ -23,9 +23,7 @@ public:
 	// Tries to move barrel to position that would hit target
 	void AimAt(FVector WorldSpaceAim);
 
-	// Takes barrel reference
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelInBP); // As all it needs is a transform
+	void SetBarrelReference(UTankBarrel* Barrel);
 
 	UFUNCTION(BlueprintCallable, Category = Dynamics)
 	void Fire();

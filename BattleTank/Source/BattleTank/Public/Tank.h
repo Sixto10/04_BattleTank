@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = GamePlay)
 	float GetHealthPercent() const;
 	
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetBarrelReference(UTankBarrel* Barrel);
+
 	bool IsBarrelMoving() const;
 
 	// For forwarding to relevant component
