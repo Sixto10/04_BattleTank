@@ -45,8 +45,14 @@ private:
 	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity);
 
 	// How fast can a projectile be launched
-	UPROPERTY(EditAnywhere, Category = Dynamics)
+	UPROPERTY(EditAnywhere, Category = Firing)
 	float LaunchSpeed = 100000;
+
+	// How fast can a projectile be launched
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float ReloadTimeInSeconds = 5;
+
+	float LastFireTime = 0;
 
 	UPROPERTY(EditAnywhere, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;

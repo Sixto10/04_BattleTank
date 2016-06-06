@@ -54,10 +54,8 @@ void ATankAIController::FireIfReady()
 
 	bool bHasFinishedAiming = !PossessedTank->IsBarrelMoving();
 
-	auto TimeSinceLastFire = FPlatformTime::Seconds() - LastFireTime;
-	if (TimeSinceLastFire > FiringRate && bHasFinishedAiming)
+	if (bHasFinishedAiming)
 	{
-		LastFireTime = FPlatformTime::Seconds();
 		PossessedTank->Fire();
 	}
 }

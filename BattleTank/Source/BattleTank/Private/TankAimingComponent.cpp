@@ -25,12 +25,15 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* Turret)
 
 void UTankAimingComponent::Fire()
 {
-	if (ProjectileBlueprint)
+	bool bIsReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+	if (ProjectileBlueprint && bIsReloaded)
 	{
 		auto Socket = FName("Projectile");
 		if (!Barrel) { return; }
+
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
 		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
 	}
 }
 

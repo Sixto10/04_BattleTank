@@ -33,7 +33,4 @@ private:
 	float AcceptanceRadius = 5.0;
 
 	float LastFireTime = 0;
-
-	UPROPERTY(EditAnywhere, Category = "AI Setup")
-	float FiringRate = 5;
 };
