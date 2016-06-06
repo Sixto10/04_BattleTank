@@ -4,6 +4,7 @@
 
 #include "Components/ActorComponent.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "Projectile.h"
 #include "TankAimingComponent.generated.h"
 
@@ -16,14 +17,12 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Delegates turret rotation to turret motors
-	UPROPERTY(BlueprintAssignable, Category = Events)
-	FOnTurretRotateRequest OnTurretRotateRequest;
-
 	// Tries to move barrel to position that would hit target
 	void AimAt(FVector WorldSpaceAim);
 
 	void SetBarrelReference(UTankBarrel* Barrel);
+
+	void SetTurretReference(UTankTurret* Turret);
 
 	UFUNCTION(BlueprintCallable, Category = Dynamics)
 	void Fire();
@@ -43,10 +42,7 @@ private:
 	void RotateTurret(float Speed);
 	void ElevateBarrel(float Speed);
 
-	bool GetRequiredLaunchVelocity(FVector WorldSpaceTarget, FVector& LaunchVelocity);
-
-	// State kept here as this is where we aggregrate calls from various sources
-	float RotateSpeed = 0;
+	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity);
 
 	// How fast can a projectile be launched
 	UPROPERTY(EditAnywhere, Category = Dynamics)
@@ -56,4 +52,5 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UTankBarrel* Barrel = nullptr;
+	UTankTurret* Turret = nullptr;
 };

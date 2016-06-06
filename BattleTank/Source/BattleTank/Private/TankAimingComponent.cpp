@@ -18,6 +18,11 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel* Barrel)
 	this->Barrel = Barrel;
 }
 
+void UTankAimingComponent::SetTurretReference(UTankTurret* Turret)
+{
+	this->Turret = Turret;
+}
+
 void UTankAimingComponent::Fire()
 {
 	if (ProjectileBlueprint)
@@ -40,25 +45,20 @@ bool UTankAimingComponent::IsBarrelMoving() const
 void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
 	UpdateAim();
-
-	// Pass through manual turret requests
-	OnTurretRotateRequest.Broadcast(RotateSpeed);
-	RotateSpeed = 0;
 }
 
 void UTankAimingComponent::AimAt(FVector WorldSpaceTarget)
 {
 	FVector LaunchVelocity;
-	if (GetRequiredLaunchVelocity(WorldSpaceTarget, LaunchVelocity))
+	if (GetRequiredLaunchDirection(WorldSpaceTarget, LaunchVelocity))
 	{
-		DesiredAimDirection = LaunchVelocity.GetSafeNormal();
+		DesiredAimDirection = LaunchVelocity;
 	}
 	// Can't find an aim solution so do nothing
 }
 
-bool UTankAimingComponent::GetRequiredLaunchVelocity(FVector WorldSpaceTarget, FVector& LaunchVelocity)
+bool UTankAimingComponent::GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity)
 {
 	if (!Barrel) { return false; }
 	FVector StartLocation = Barrel->GetComponentLocation();
@@ -73,6 +73,7 @@ bool UTankAimingComponent::GetRequiredLaunchVelocity(FVector WorldSpaceTarget, F
 		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
+	LaunchVelocity = LaunchVelocity.GetSafeNormal();
 	return bIsCalculationSuccessful;
 }
 
@@ -109,7 +110,7 @@ void UTankAimingComponent::UpdateAim()
 
 void UTankAimingComponent::RotateTurret(float Speed)
 {
-	RotateSpeed = FMath::Clamp<float>(RotateSpeed + Speed, -1, 1);
+	Turret->Rotate(FMath::Clamp<float>(Speed, -1, 1));
 }
 
 void UTankAimingComponent::ElevateBarrel(float Speed)

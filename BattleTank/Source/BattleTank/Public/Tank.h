@@ -6,8 +6,7 @@
 
 // Import required components
 #include "TankMovementComponent.h"
-#include "TankAimingComponent.h"
-
+#include "TankAimingComponent.h" // In turn imports barrel and turret
 #include "Tank.generated.h" // Must be the last include
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDeathEvent);
@@ -30,6 +29,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UTankBarrel* Barrel);
+	
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTankTurret* Turret);
 
 	bool IsBarrelMoving() const;
 
