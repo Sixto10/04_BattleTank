@@ -32,7 +32,7 @@ public:
 
 	// For forwarding to relevant component
 	UFUNCTION(BlueprintCallable, Category = Control)
-	void AimAt(FVector WorldSpaceAim);
+	void AimAt(FVector HitLocation);
 	
 	// Signature comes from engine code
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);

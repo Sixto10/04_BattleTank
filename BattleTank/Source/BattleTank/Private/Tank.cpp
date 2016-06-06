@@ -23,9 +23,9 @@ int32 ATank::GetRoundsLeft() const
 	return CurrentAmmo;
 }
 
-void ATank::AimAt(FVector WorldSpaceAim)
+void ATank::AimAt(FVector HitLocation)
 {
-	TankAimingComponent->AimAt(WorldSpaceAim);
+	TankAimingComponent->AimAt(HitLocation);
 }
 
 float ATank::GetHealthPercent() const
