@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
+#include "TankBarrel.h"
 #include "Projectile.h"
 #include "TankAimingComponent.generated.h"
 
@@ -19,16 +20,12 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnTurretRotateRequest OnTurretRotateRequest;
 
-	// Delegates barrel elevation to barrel motors
-	UPROPERTY(BlueprintAssignable, Category = Events)
-	FOnBarrelElevateRequest OnBarrelElevateRequest;
-	
 	// Tries to move barrel to position that would hit target
 	void AimAt(FVector WorldSpaceAim);
 
 	// Takes barrel reference
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(USceneComponent* BarrelInBP); // As all it needs is a transform
+	void SetBarrelReference(UTankBarrel* BarrelInBP); // As all it needs is a transform
 
 	UFUNCTION(BlueprintCallable, Category = Dynamics)
 	void Fire();
@@ -52,7 +49,6 @@ private:
 
 	// State kept here as this is where we aggregrate calls from various sources
 	float RotateSpeed = 0;
-	float ElevateSpeed = 0;
 
 	// How fast can a projectile be launched
 	UPROPERTY(EditAnywhere, Category = Dynamics)
@@ -61,6 +57,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
-	USceneComponent* Barrel = nullptr;
-
+	UTankBarrel* Barrel = nullptr;
 };

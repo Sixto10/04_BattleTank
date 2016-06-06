@@ -13,7 +13,7 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UTankAimingComponent::SetBarrelReference(USceneComponent* BarrelInBP)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelInBP)
 {
 	Barrel = BarrelInBP; // Sam thought of this, I said we should do this->Barrel = Barrel but he wouldn't listen.
 }
@@ -46,9 +46,6 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 	// Pass through manual turret requests
 	OnTurretRotateRequest.Broadcast(RotateSpeed);
 	RotateSpeed = 0;
-
-	OnBarrelElevateRequest.Broadcast(ElevateSpeed);
-	ElevateSpeed = 0;
 }
 
 void UTankAimingComponent::AimAt(FVector WorldSpaceTarget)
@@ -106,6 +103,7 @@ void UTankAimingComponent::UpdateAim()
 	auto DeltaRotation = Delta.Rotator();
 
 	RotateTurret(DeltaRotation.Yaw);
+
 	ElevateBarrel(DeltaRotation.Pitch);
 }
 
@@ -116,5 +114,5 @@ void UTankAimingComponent::RotateTurret(float Speed)
 
 void UTankAimingComponent::ElevateBarrel(float Speed)
 {
-	ElevateSpeed = FMath::Clamp<float>(ElevateSpeed + Speed, -1, 1);
+	Barrel->Elevate(FMath::Clamp<float>(Speed, -1, 1));
 }
