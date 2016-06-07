@@ -1,6 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
+#include "TankMovementComponent.h"
+#include "TankAimingComponent.h"
+#include "TankBarrel.h"
+#include "Projectile.h"
 #include "Tank.h"
 
 // Sets default values
@@ -23,15 +27,15 @@ int ATank::GetRoundsLeft() const
 	return CurrentAmmo;
 }
 
-void ATank::SetBarrelReference(UTankBarrel* Barrel)
+void ATank::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
-	TankAimingComponent->SetBarrelReference(Barrel);
-	this->Barrel = Barrel;
+	TankAimingComponent->SetBarrelReference(BarrelToSet);
+	Barrel = BarrelToSet;
 }
 
-void ATank::SetTurretReference(UTankTurret* Turret)
+void ATank::SetTurretReference(UTankTurret* TurretToSet)
 {
-	TankAimingComponent->SetTurretReference(Turret);
+	TankAimingComponent->SetTurretReference(TurretToSet);
 }
 
 void ATank::AimAt(FVector WorldSpaceAim)
@@ -53,7 +57,7 @@ void ATank::BlowUpTank()
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	// We want hit points so we're clear on when health is zero
-	int DamagePoints = FMath::Round(DamageAmount);
+    int DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 
 	auto DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
 	CurrentHealth -= DamageToApply;

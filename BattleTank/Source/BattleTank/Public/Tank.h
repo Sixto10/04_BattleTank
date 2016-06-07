@@ -3,13 +3,14 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
-
-// Import required components
-#include "TankMovementComponent.h"
-#include "TankAimingComponent.h" // In turn imports barrel and turret
 #include "Tank.generated.h" // Must be the last include
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDeathEvent);
+
+// Forward declarations
+class UTankMovementComponent;
+class UTankAimingComponent;
+class AProjectile;
 
 // Represents the physical tank, and allows tank-level interaction such as reloading
 UCLASS(ClassGroup = (Custom), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
@@ -50,7 +51,7 @@ public:
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	UTankMovementComponent* TankMovementComponent = nullptr; 
+    UTankMovementComponent* TankMovementComponent = nullptr;
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;

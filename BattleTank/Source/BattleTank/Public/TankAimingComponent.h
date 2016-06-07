@@ -3,10 +3,10 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
-#include "TankBarrel.h"
-#include "TankTurret.h"
-#include "Projectile.h"
 #include "TankAimingComponent.generated.h"
+
+class UTankBarrel;
+class UTankTurret;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurretRotateRequest, float, Speed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBarrelElevateRequest, float, Speed);

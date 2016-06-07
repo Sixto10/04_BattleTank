@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
+#include "TankBarrel.h"
+#include "TankTurret.h"
+#include "Projectile.h"
 #include "TankAimingComponent.h"
 
 
@@ -13,14 +16,14 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* Barrel)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) // Note name
 {
-	this->Barrel = Barrel;
+	Barrel = BarrelToSet;
 }
 
-void UTankAimingComponent::SetTurretReference(UTankTurret* Turret)
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
-	this->Turret = Turret;
+	Turret = TurretToSet;
 }
 
 bool UTankAimingComponent::IsBarrelMoving() const

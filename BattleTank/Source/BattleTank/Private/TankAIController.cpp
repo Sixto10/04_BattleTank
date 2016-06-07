@@ -2,7 +2,7 @@
 
 #include "BattleTank.h"
 #include "TankAIController.h"
-
+#include "Tank.h"
 
 // Wait until the controlled pawn is set
 void ATankAIController::SetPawn(APawn * InPawn)
