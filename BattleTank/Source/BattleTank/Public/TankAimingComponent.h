@@ -36,11 +36,6 @@ private:
 		
 	FVector DesiredAimDirection = FVector::ZeroVector;
 
-	void RotateTurret(float Speed);
-	void ElevateBarrel(float Speed);
-
-	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed);
-
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 };

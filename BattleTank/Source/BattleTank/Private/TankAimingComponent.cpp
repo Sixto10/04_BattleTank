@@ -42,31 +42,27 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 
 void UTankAimingComponent::AimAt(FVector WorldSpaceTarget, float LaunchSpeed)
 {
-	FVector LaunchVelocity;
-	if (GetRequiredLaunchDirection(WorldSpaceTarget, LaunchVelocity, LaunchSpeed))
-	{
-		DesiredAimDirection = LaunchVelocity;
-	}
-	// Can't find an aim solution so do nothing
-}
-
-bool UTankAimingComponent::GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed)
-{
-	if (!Barrel) { return false; }
+    if (!Barrel) { return; }
+    
 	FVector StartLocation = Barrel->GetComponentLocation();
-	bool bIsCalculationSuccessful = UGameplayStatics::SuggestProjectileVelocity(
-		this, // GameplayStatic needs context 
-		LaunchVelocity, // OUT parameter
-		StartLocation,
-		WorldSpaceTarget,
-		LaunchSpeed,
-		false,
-		0,
-		0,
-		ESuggestProjVelocityTraceOption::DoNotTrace
-	);
-	LaunchVelocity = LaunchVelocity.GetSafeNormal();
-	return bIsCalculationSuccessful;
+    FVector LaunchVelocity; // Out parameter
+	if (UGameplayStatics::SuggestProjectileVelocity
+        (
+            this, // GameplayStatic needs context
+            LaunchVelocity, // OUT parameter
+            StartLocation,
+            WorldSpaceTarget,
+            LaunchSpeed,
+            false,
+            0,
+            0,
+            ESuggestProjVelocityTraceOption::DoNotTrace
+            )
+        )
+    {
+        DesiredAimDirection = LaunchVelocity.GetSafeNormal();
+    }
+    // If can't find solution don't aim
 }
 
 /* Code that causes rotation in the WRONG direction sometimes...
@@ -95,17 +91,9 @@ void UTankAimingComponent::UpdateAim()
 	auto Delta = BarrelRotation.Inverse() * CurrentAim;
 	auto DeltaRotation = Delta.Rotator();
 
-	RotateTurret(DeltaRotation.Yaw);
+    auto ClampedYaw = FMath::Clamp<float>(DeltaRotation.Yaw, -1, 1);
+	Turret->Rotate(ClampedYaw);
 
-	ElevateBarrel(DeltaRotation.Pitch);
-}
-
-void UTankAimingComponent::RotateTurret(float Speed)
-{
-	Turret->Rotate(FMath::Clamp<float>(Speed, -1, 1));
-}
-
-void UTankAimingComponent::ElevateBarrel(float Speed)
-{
-	Barrel->Elevate(FMath::Clamp<float>(Speed, -1, 1));
+    auto ClampedPitch = FMath::Clamp<float>(DeltaRotation.Pitch, -1, 1);
+	Barrel->Elevate(ClampedPitch);
 }

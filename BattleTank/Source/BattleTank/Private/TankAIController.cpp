@@ -52,9 +52,7 @@ void ATankAIController::FireIfReady()
 	auto PossessedTank = Cast<ATank>(GetPawn());
 	if (!PossessedTank) { return; }
 
-	bool bHasFinishedAiming = !PossessedTank->IsBarrelMoving();
-
-	if (bHasFinishedAiming)
+	if (!PossessedTank->IsBarrelMoving())
 	{
 		PossessedTank->Fire();
 	}
