@@ -23,20 +23,6 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* Turret)
 	this->Turret = Turret;
 }
 
-void UTankAimingComponent::Fire()
-{
-	bool bIsReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-	if (ProjectileBlueprint && bIsReloaded)
-	{
-		auto Socket = FName("Projectile");
-		if (!Barrel) { return; }
-
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
-		Projectile->LaunchProjectile(LaunchSpeed);
-		LastFireTime = FPlatformTime::Seconds();
-	}
-}
-
 bool UTankAimingComponent::IsBarrelMoving() const
 {
 	if (!Barrel) { return false; } // Barrel may not be attached to tank yet
@@ -51,17 +37,17 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 	UpdateAim();
 }
 
-void UTankAimingComponent::AimAt(FVector WorldSpaceTarget)
+void UTankAimingComponent::AimAt(FVector WorldSpaceTarget, float LaunchSpeed)
 {
 	FVector LaunchVelocity;
-	if (GetRequiredLaunchDirection(WorldSpaceTarget, LaunchVelocity))
+	if (GetRequiredLaunchDirection(WorldSpaceTarget, LaunchVelocity, LaunchSpeed))
 	{
 		DesiredAimDirection = LaunchVelocity;
 	}
 	// Can't find an aim solution so do nothing
 }
 
-bool UTankAimingComponent::GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity)
+bool UTankAimingComponent::GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed)
 {
 	if (!Barrel) { return false; }
 	FVector StartLocation = Barrel->GetComponentLocation();

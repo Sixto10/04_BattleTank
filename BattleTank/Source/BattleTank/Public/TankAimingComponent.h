@@ -18,14 +18,11 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 
 public:	
 	// Tries to move barrel to position that would hit target
-	void AimAt(FVector WorldSpaceAim);
+	void AimAt(FVector WorldSpaceTarget, float LaunchSpeed);
 
 	void SetBarrelReference(UTankBarrel* Barrel);
 
 	void SetTurretReference(UTankTurret* Turret);
-
-	UFUNCTION(BlueprintCallable, Category = Dynamics)
-	void Fire();
 
 	bool IsBarrelMoving() const;
 
@@ -42,20 +39,7 @@ private:
 	void RotateTurret(float Speed);
 	void ElevateBarrel(float Speed);
 
-	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity);
-
-	// How fast can a projectile be launched
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000;
-
-	// How fast can a projectile be launched
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float ReloadTimeInSeconds = 5;
-
-	float LastFireTime = 0;
-
-	UPROPERTY(EditAnywhere, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed);
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;

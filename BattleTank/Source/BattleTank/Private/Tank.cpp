@@ -26,6 +26,7 @@ int ATank::GetRoundsLeft() const
 void ATank::SetBarrelReference(UTankBarrel* Barrel)
 {
 	TankAimingComponent->SetBarrelReference(Barrel);
+	this->Barrel = Barrel;
 }
 
 void ATank::SetTurretReference(UTankTurret* Turret)
@@ -35,7 +36,7 @@ void ATank::SetTurretReference(UTankTurret* Turret)
 
 void ATank::AimAt(FVector WorldSpaceAim)
 {
-	TankAimingComponent->AimAt(WorldSpaceAim);
+	TankAimingComponent->AimAt(WorldSpaceAim, LaunchSpeed);
 }
 
 float ATank::GetHealthPercent() const
@@ -71,9 +72,17 @@ bool ATank::IsBarrelMoving() const
 
 void ATank::Fire()
 {
-	if (CurrentAmmo > 0)
+	bool bIsReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+	if (ProjectileBlueprint && bIsReloaded && CurrentAmmo > 0)
 	{
-		TankAimingComponent->Fire();
+		auto Socket = FName("Projectile");
+		if (!Barrel) { return; }
+
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(Socket), Barrel->GetSocketRotation(Socket));
+		Projectile->LaunchProjectile(LaunchSpeed);
+
+		LastFireTime = FPlatformTime::Seconds();
+
 		CurrentAmmo--;
 	}
 }
