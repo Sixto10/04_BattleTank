@@ -13,7 +13,7 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) // Note name
@@ -33,14 +33,7 @@ bool UTankAimingComponent::IsBarrelMoving() const
 	return !DesiredAimDirection.Equals(BarrelForward, 0.01);
 }
 
-// Called every frame
-void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
-{
-	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-	UpdateAim();
-}
-
-void UTankAimingComponent::AimAt(FVector WorldSpaceTarget, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
     if (!Barrel) { return; }
     
@@ -51,16 +44,17 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceTarget, float LaunchSpeed)
             this, // GameplayStatic needs context
             LaunchVelocity, // OUT parameter
             StartLocation,
-            WorldSpaceTarget,
+            HitLocation,
             LaunchSpeed,
             false,
+            0, // TODO remove parameters from here
             0,
-            0,
-            ESuggestProjVelocityTraceOption::DoNotTrace
+         ESuggestProjVelocityTraceOption::DoNotTrace
             )
         )
     {
         DesiredAimDirection = LaunchVelocity.GetSafeNormal();
+        MoveBarrel();
     }
     // If can't find solution don't aim
 }
@@ -81,7 +75,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceTarget, float LaunchSpeed)
 
 	B^-1 B is the identity matrix as rotations are always invertible
 */
-void UTankAimingComponent::UpdateAim()
+void UTankAimingComponent::MoveBarrel()
 {
 	auto CurrentAim = DesiredAimDirection.ToOrientationQuat();
 	

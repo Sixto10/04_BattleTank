@@ -29,13 +29,10 @@ public:
 private:
 	UTankAimingComponent();
 
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void UpdateAim();
-		
-	FVector DesiredAimDirection = FVector::ZeroVector;
-
+    void MoveBarrel();
+    
+    FVector DesiredAimDirection;
+    
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 };
