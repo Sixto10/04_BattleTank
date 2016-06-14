@@ -34,12 +34,12 @@ void ATankPlayerController::AimTowardsCrosshair()
 	}
 }
 
-bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 {
 	// Get or set crosshair position
 	int32 sizeX, sizeY;
 	GetViewportSize(sizeX, sizeY);
-	auto ScreenLocation = FVector2D(sizeX / 2, sizeY / 3); // Hard coded
+	auto ScreenLocation = FVector2D(sizeX * CrossHairXLocation, sizeY * CrossHairYLocation);
 
 	FVector LookDirection;
 	if (GetLookDirection(ScreenLocation, LookDirection))
@@ -52,11 +52,11 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
 {
 	// WorldPosition seems to be garbage so we can't use this.
-	FVector WorldPosition;
-	return UGameplayStatics::DeprojectScreenToWorld(
-		this,
-		ScreenLocation,
-		WorldPosition,
+	FVector WorldLocation;
+	return DeprojectScreenPositionToWorld(
+		ScreenLocation.X,
+        ScreenLocation.Y,
+		WorldLocation,
 		LookDirection
 	);
 }

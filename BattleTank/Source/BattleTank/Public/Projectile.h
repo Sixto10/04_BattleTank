@@ -59,5 +59,5 @@ private:
 	float DestroyDelay = 10;
 
 	UPROPERTY(EditAnywhere)
-	int ProjectileDamage = 20;
+	int32 ProjectileDamage = 20;
 };

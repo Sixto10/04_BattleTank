@@ -18,7 +18,7 @@ void ATank::AddAmmo(int Rounds)
 	CurrentAmmo = FMath::Clamp(CurrentAmmo + Rounds, 0, MaxAmmo);
 }
 
-int ATank::GetRoundsLeft() const
+int32 ATank::GetRoundsLeft() const
 {
 	return CurrentAmmo;
 }
@@ -53,7 +53,7 @@ void ATank::BlowUpTank()
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	// We want hit points so we're clear on when health is zero
-	int DamagePoints = FMath::Round(DamageAmount);
+	int32 DamagePoints = FMath::Round(DamageAmount);
 
 	auto DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
 	CurrentHealth -= DamageToApply;
