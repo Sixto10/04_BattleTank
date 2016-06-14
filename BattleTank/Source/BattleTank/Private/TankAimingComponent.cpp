@@ -86,23 +86,15 @@ void UTankAimingComponent::UpdateAim()
 {
 	auto CurrentAim = DesiredAimDirection.ToOrientationQuat();
 	
-	if (!Barrel) { return; }
+	if (!Barrel || !Turret) { return; }
 	auto BarrelRotation = Barrel->GetForwardVector().ToOrientationQuat();
 
 	auto Delta = BarrelRotation.Inverse() * CurrentAim;
 	auto DeltaRotation = Delta.Rotator();
 
-	RotateTurret(DeltaRotation.Yaw);
-
-	ElevateBarrel(DeltaRotation.Pitch);
-}
-
-void UTankAimingComponent::RotateTurret(float Speed)
-{
-	Turret->Rotate(FMath::Clamp<float>(Speed, -1, 1));
-}
-
-void UTankAimingComponent::ElevateBarrel(float Speed)
-{
-	Barrel->Elevate(FMath::Clamp<float>(Speed, -1, 1));
+	auto YawThrow = FMath::Clamp<float>(DeltaRotation.Yaw, -1, 1);
+	Turret->Rotate(YawThrow);
+	
+	auto PitchThrow = FMath::Clamp<float>(DeltaRotation.Pitch, -1, 1);
+	Barrel->Elevate(PitchThrow);
 }

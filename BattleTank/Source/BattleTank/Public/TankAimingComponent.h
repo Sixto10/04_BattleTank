@@ -21,7 +21,6 @@ public:
 	void AimAt(FVector WorldSpaceTarget, float LaunchSpeed);
 
 	void SetBarrelReference(UTankBarrel* Barrel);
-
 	void SetTurretReference(UTankTurret* Turret);
 
 	bool IsBarrelMoving() const;
@@ -35,9 +34,6 @@ private:
 	void UpdateAim();
 		
 	FVector DesiredAimDirection = FVector::ZeroVector;
-
-	void RotateTurret(float Speed);
-	void ElevateBarrel(float Speed);
 
 	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed);
 
