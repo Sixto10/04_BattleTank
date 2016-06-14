@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
+#include "TankBarrel.h"
+#include "TankTurret.h"
+#include "Projectile.h"
 #include "TankAimingComponent.h"
 
 
@@ -10,17 +13,17 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* Barrel)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) // Note name
 {
-	this->Barrel = Barrel;
+	Barrel = BarrelToSet;
 }
 
-void UTankAimingComponent::SetTurretReference(UTankTurret* Turret)
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
-	this->Turret = Turret;
+	Turret = TurretToSet;
 }
 
 bool UTankAimingComponent::IsBarrelMoving() const
@@ -30,40 +33,30 @@ bool UTankAimingComponent::IsBarrelMoving() const
 	return !DesiredAimDirection.Equals(BarrelForward, 0.01);
 }
 
-// Called every frame
-void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
+void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-	UpdateAim();
-}
-
-void UTankAimingComponent::AimAt(FVector WorldSpaceTarget, float LaunchSpeed)
-{
-	FVector LaunchVelocity;
-	if (GetRequiredLaunchDirection(WorldSpaceTarget, LaunchVelocity, LaunchSpeed))
-	{
-		DesiredAimDirection = LaunchVelocity;
-	}
-	// Can't find an aim solution so do nothing
-}
-
-bool UTankAimingComponent::GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed)
-{
-	if (!Barrel) { return false; }
+    if (!Barrel) { return; }
+    
 	FVector StartLocation = Barrel->GetComponentLocation();
-	bool bIsCalculationSuccessful = UGameplayStatics::SuggestProjectileVelocity(
-		this, // GameplayStatic needs context 
-		LaunchVelocity, // OUT parameter
-		StartLocation,
-		WorldSpaceTarget,
-		LaunchSpeed,
-		false,
-		0,
-		0,
-		ESuggestProjVelocityTraceOption::DoNotTrace
-	);
-	LaunchVelocity = LaunchVelocity.GetSafeNormal();
-	return bIsCalculationSuccessful;
+    FVector LaunchVelocity; // Out parameter
+	if (UGameplayStatics::SuggestProjectileVelocity
+        (
+            this, // GameplayStatic needs context
+            LaunchVelocity, // OUT parameter
+            StartLocation,
+            HitLocation,
+            LaunchSpeed,
+            false,
+            0, // TODO remove parameters from here
+            0,
+         ESuggestProjVelocityTraceOption::DoNotTrace
+            )
+        )
+    {
+        DesiredAimDirection = LaunchVelocity.GetSafeNormal();
+        MoveBarrel();
+    }
+    // If can't find solution don't aim
 }
 
 /* Code that causes rotation in the WRONG direction sometimes...
@@ -82,7 +75,7 @@ bool UTankAimingComponent::GetRequiredLaunchDirection(FVector WorldSpaceTarget, 
 
 	B^-1 B is the identity matrix as rotations are always invertible
 */
-void UTankAimingComponent::UpdateAim()
+void UTankAimingComponent::MoveBarrel()
 {
 	auto CurrentAim = DesiredAimDirection.ToOrientationQuat();
 	

@@ -3,10 +3,10 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
-#include "TankBarrel.h"
-#include "TankTurret.h"
-#include "Projectile.h"
 #include "TankAimingComponent.generated.h"
+
+class UTankBarrel;
+class UTankTurret;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurretRotateRequest, float, Speed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBarrelElevateRequest, float, Speed);
@@ -27,16 +27,11 @@ public:
 
 private:
 	UTankAimingComponent();
-
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void UpdateAim();
 		
 	FVector DesiredAimDirection = FVector::ZeroVector;
 
-	bool GetRequiredLaunchDirection(FVector WorldSpaceTarget, FVector& LaunchVelocity, float LaunchSpeed);
-
+    void MoveBarrel();
+        
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 };

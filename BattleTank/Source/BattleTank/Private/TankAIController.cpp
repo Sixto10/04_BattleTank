@@ -2,7 +2,7 @@
 
 #include "BattleTank.h"
 #include "TankAIController.h"
-
+#include "Tank.h"
 
 // Wait until the controlled pawn is set
 void ATankAIController::SetPawn(APawn * InPawn)
@@ -52,9 +52,7 @@ void ATankAIController::FireIfReady()
 	auto PossessedTank = Cast<ATank>(GetPawn());
 	if (!PossessedTank) { return; }
 
-	bool bHasFinishedAiming = !PossessedTank->IsBarrelMoving();
-
-	if (bHasFinishedAiming)
+	if (!PossessedTank->IsBarrelMoving())
 	{
 		PossessedTank->Fire();
 	}
