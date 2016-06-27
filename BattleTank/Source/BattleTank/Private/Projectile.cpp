@@ -25,6 +25,7 @@ AProjectile::AProjectile()
 	
 	// To make hit tanks move
 	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+    // TODO fix
 	ExplosionForce->AttachTo(RootComponent);
 
 	// For balistic calculations
@@ -38,7 +39,8 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	// Listen for the collision mesh's OnHit event, delegate to OnHit
-	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+    // TODO replace
+	// CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 void AProjectile::LaunchProjectile(float Speed)

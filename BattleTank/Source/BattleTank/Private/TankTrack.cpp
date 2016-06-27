@@ -20,7 +20,8 @@ void UTankTrack::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
+    // TODO replace
+	//OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
 // Called every frame
