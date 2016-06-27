@@ -7,11 +7,7 @@
 
 // We are hiding categories to keep things simple in the Details tab
 // Note use of comments to remove newline characters from macro
-UCLASS(/*
-*/	ClassGroup=(Custom),/*
-*/	meta=(BlueprintSpawnableComponent),/*
-*/	hidecategories=("Collision")/*
-*/) 
+UCLASS(ClassGroup=(Custom),meta=(BlueprintSpawnableComponent)) 
 
 // Represent the tank engine and tracks
 // Responsible for translating throttle values into track forces
