@@ -20,19 +20,14 @@ ATank::ATank()
 
 void ATank::BeginPlay()
 {
+	Super::BeginPlay();
 	TankAimingComponent = FindComponentByClass<UTankAimingComponent>(); // must be this late
 }
 
 void ATank::AimAt(FVector HitLocation)
 {
-	if (TankAimingComponent)
-	{
-		TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank can't find aiming component"))
-	}
+	if (!TankAimingComponent) { return; }
+	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
 
 void ATank::Fire()

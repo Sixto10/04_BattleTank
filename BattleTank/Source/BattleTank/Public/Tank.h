@@ -28,7 +28,7 @@ protected: // Visible only to children, i.e. Blueprint
 	UPROPERTY(BlueprintReadOnly)
 	UTankMovementComponent* TankMovementComponent = nullptr;
 
-	UTankAimingComponent* TankAimingComponent = nullptr;
+
 	
 private:
 	ATank();
@@ -48,4 +48,6 @@ private:
 	UTankBarrel* Barrel = nullptr;
 
 	double LastFireTime = 0;
+
+	UTankAimingComponent* TankAimingComponent = nullptr;
 };
