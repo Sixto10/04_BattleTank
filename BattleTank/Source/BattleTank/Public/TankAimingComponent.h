@@ -15,17 +15,20 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-	void SetTurretReference(UTankTurret* TurretToSet);
+public:
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 
+	// TODO move firing here
+
+	void SetBarrelReference(UTankBarrel* BarrelToSet);
+	void SetTurretReference(UTankTurret* TurretToSet);
+
 private:
-	UTankAimingComponent();
+	UTankAimingComponent(); // Private OK because of Unreal magic
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 
-	void MoveBarrelTowards(FVector AimDirection);
+	void MoveAimTowards(FVector AimDirection);
 
 };

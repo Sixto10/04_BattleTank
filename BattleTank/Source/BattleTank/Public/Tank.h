@@ -22,7 +22,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	void Fire();
 
-protected:
+	// TODO add movement top-level API here
+
+protected: // Visible only to children, i.e. Blueprint
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
 

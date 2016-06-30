@@ -4,31 +4,21 @@
 #include "Tank.h"
 #include "TankPlayerController.h"
 
-
-void ATankPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick( DeltaTime );
 	AimTowardsCrosshair();
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
-
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) { return; }
+	auto ControlledTank = Cast<ATank>(GetPawn());
+	if (!ControlledTank) { return; }
 
 	FVector HitLocation; // Out parameter
 	if (GetSightRayHitLocation(HitLocation)) // Has "side-effect", is going to line trace
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		ControlledTank->AimAt(HitLocation);
 	}
 }
 

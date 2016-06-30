@@ -15,7 +15,7 @@ class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 	
 public:
 	// Sets a throttle between -1 and +1, UFUNCTION so can be bound directly to input
-	UFUNCTION(BlueprintCallable, Category = Input)
+	UFUNCTION(BlueprintCallable, Category = Input) // TODO maybe remove
 	void SetThrottle(float Throttle);
 	
 private:
