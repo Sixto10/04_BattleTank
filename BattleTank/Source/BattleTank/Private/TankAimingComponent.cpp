@@ -17,16 +17,18 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
+void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!BarrelToSet) { return; }
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
-{
-	if (!TurretToSet) { return; }
-	Turret = TurretToSet;
+	if (BarrelToSet && TurretToSet)
+	{
+		Barrel = BarrelToSet;
+		Turret = TurretToSet;
+		UE_LOG(LogTemp, Warning, TEXT("Aiming initialised"))
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Aiming failed to initialise"))
+	}
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)

@@ -19,9 +19,9 @@ public:
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 
 	// TODO move firing here
-
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-	void SetTurretReference(UTankTurret* TurretToSet);
+	
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 private:
 	UTankAimingComponent(); // Private OK because of Unreal magic

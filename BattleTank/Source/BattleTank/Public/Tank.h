@@ -25,17 +25,15 @@ public:
 	// TODO add movement top-level API here
 
 protected: // Visible only to children, i.e. Blueprint
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
-
 	UPROPERTY(BlueprintReadOnly)
 	UTankMovementComponent* TankMovementComponent = nullptr;
 
+	UTankAimingComponent* TankAimingComponent = nullptr;
+	
 private:
 	ATank();
+
+	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
@@ -48,8 +46,6 @@ private:
 	
 	// Local barrel reference for spawning projectile
 	UTankBarrel* Barrel = nullptr;
-
-	UTankAimingComponent* TankAimingComponent = nullptr;
 
 	double LastFireTime = 0;
 };
